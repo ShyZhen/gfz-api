@@ -438,7 +438,7 @@ class UserService extends Service
             if ($user->id != $currId) {
 
                 // 找到这些人中 也同时关注了我的 (先注释，优化性能)
-//                $myFansArr = $this->usersFollowRepository->getSomeoneFansByIdArr($currId, $userFollowsIdArr);
+                $myFansArr = $this->usersFollowRepository->getSomeoneFansByIdArr($currId, $userFollowsIdArr);
                 // 找到这些人中 我同时关注了的
                 $myFollowedArr = $this->usersFollowRepository->getSomeoneFollowsByIdArr($currId, $userFollowsIdArr);
 
@@ -447,11 +447,11 @@ class UserService extends Service
                     $userFollow->inMyFollows = (bool) false;
 
                     // 同时关注了我 (先注释，优化性能)
-//                    foreach ($myFansArr as $myFans) {
-//                        if ($myFans->following_user_id == $userFollow->id) {
-//                            $userFollow->inMyFans = (bool) true;
-//                        }
-//                    }
+                    foreach ($myFansArr as $myFans) {
+                        if ($myFans->following_user_id == $userFollow->id) {
+                            $userFollow->inMyFans = (bool) true;
+                        }
+                    }
 
                     // 我同时关注了他（她）
                     foreach ($myFollowedArr as $myFollower) {
@@ -525,20 +525,20 @@ class UserService extends Service
             if ($user->id != $currId) {
 
                 // 找到这些人中 也同时关注了我的 (先注释，优化性能)
-//                $myFansArr = $this->usersFollowRepository->getSomeoneFansByIdArr($currId, $userFansIdArr);
+                $myFansArr = $this->usersFollowRepository->getSomeoneFansByIdArr($currId, $userFansIdArr);
                 // 找到这些人中 我同时关注了的
                 $myFollowedArr = $this->usersFollowRepository->getSomeoneFollowsByIdArr($currId, $userFansIdArr);
 
                 foreach ($userFansList as &$userFan) {
-//                    $userFan->inMyFans = (bool) false;
+                    $userFan->inMyFans = (bool) false;
                     $userFan->inMyFollows = (bool) false;
 
                     // 同时关注了我 (先注释，优化性能)
-//                    foreach ($myFansArr as $myFan) {
-//                        if ($myFan->following_user_id == $userFan->id) {
-//                            $userFan->inMyFans = (bool) true;
-//                        }
-//                    }
+                    foreach ($myFansArr as $myFan) {
+                        if ($myFan->following_user_id == $userFan->id) {
+                            $userFan->inMyFans = (bool) true;
+                        }
+                    }
 
                     // 我同时关注了他（她）
                     foreach ($myFollowedArr as $myFollower) {

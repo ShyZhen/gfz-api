@@ -54,6 +54,7 @@ return [
     'submit' => '提交',
     'account' => '账号',
     'no_posts' => '没有相关文章',
+    'no_timelines' => '没有相关内容',
     'no_comments' => '没有相关评论',
     'no_answers' => '没有相关回答',
     'no_videos' => '没有相关视频',

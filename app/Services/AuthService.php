@@ -716,7 +716,7 @@ class AuthService extends Service
         $code = $this->redisService->getRedis('user:login:account:' . $account);
 
         if ($code) {
-            if ($code == $verifyCode || $verifyCode == 112233) {
+            if ($code == $verifyCode) {
                 // 是否存在，不存在则新建
                 $user = $this->userRepository->findBy($type, $account);
                 if ($user) {
@@ -724,7 +724,7 @@ class AuthService extends Service
                 } else {
                     $uuid = self::uuid('user-');
                     $user = $this->userRepository->create([
-                        'name' => substr($account, 0, 3) . '****' . substr($account, 6, 4),
+                        'name' => substr($account, 0, 3) . '****' . substr($account, 7, 4),
                         $type => $account,
                         'uuid' => $uuid,
                         'password' => bcrypt(time()),

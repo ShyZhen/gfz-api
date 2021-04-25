@@ -260,6 +260,56 @@ class ActionService extends Service
     }
 
     /**
+     * @param $resourceId
+     * @param $type
+     * @param $resourceType
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function onlyLike($resourceId, $type, $resourceType)
+    {
+        $resource = '';
+        $field = $type . '_num';
+
+        // 文章和回答都是uuid，评论是id
+        if ($resourceType === 'post') {
+            $resource = $this->postRepository->findBy('uuid', $resourceId);
+        } elseif ($resourceType === 'comment') {
+            $resource = $this->commentRepository->find($resourceId);
+        } elseif ($resourceType === 'answer') {
+            $resource = $this->answerRepository->findBy('uuid', $resourceId);
+        } elseif ($resourceType === 'video') {
+            $resource = $this->videoRepository->findBy('uuid', $resourceId);
+        } elseif ($resourceType === 'timeline') {
+            $resource = $this->timelineRepository->findBy('uuid', $resourceId);
+        }
+
+        // 目前记录赞和踩都在一张表中，后期可考虑分成单表
+        if ($resource) {
+            $pivot = $this->postsCommentsLikeRepository->hasAction($resource->id, $type, $resourceType);
+
+            if ($pivot) {
+                $flag = false;
+            } else {
+                // 生成
+                $this->postsCommentsLikeRepository->makeAction($resource->id, $type, $resourceType);
+                $resource->$field += 1;
+                $resource->save();
+                $flag = true;
+            }
+
+            return response()->json(
+                ['data' => $flag],
+                Response::HTTP_OK
+            );
+        } else {
+            return response()->json(
+                ['message' => __('app.no_' . $resourceType . 's')],
+                Response::HTTP_NOT_FOUND
+            );
+        }
+    }
+
+    /**
      * 查询该 文章/回答/评论 是否存在 赞、踩
      *
      * @Author huaixiu.zhen

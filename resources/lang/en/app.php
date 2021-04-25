@@ -54,6 +54,7 @@ return [
     'submit' => 'Submit',
     'account' => 'Account',
     'no_posts' => 'There is nothing ',
+    'no_timelines' => 'There is nothing ',
     'no_comments' => 'There is nothing ',
     'no_answers' => 'There is nothing ',
     'no_videos' => 'There is nothing ',

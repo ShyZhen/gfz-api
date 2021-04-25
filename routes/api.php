@@ -150,6 +150,7 @@ Route::prefix('V1')->namespace('Api\V1')->middleware(['auth:api'])->group(functi
         Route::get('user-timeline/{uuid}', 'TimelineController@userTimeline');
     });
     // 文章 赞、取消赞，踩、取消踩
+    Route::post('only-like/timeline/{uuid}', 'ActionController@onlyLikeTimeline');
     Route::post('like/timeline/{uuid}', 'ActionController@likeTimeline');
     Route::post('dislike/timeline/{uuid}', 'ActionController@dislikeTimeline');
     Route::get('status/timeline/{uuid}', 'ActionController@statusTimeline');

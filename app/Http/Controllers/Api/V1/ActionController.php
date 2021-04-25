@@ -325,6 +325,17 @@ class ActionController extends Controller
     }
 
     /**
+     * 赞，已经赞过则不操作
+     *
+     * @param $uuid
+     * @return mixed
+     */
+    public function onlyLikeTimeline($uuid)
+    {
+        return $this->actionService->onlyLike($uuid, 'like', 'timeline');
+    }
+
+    /**
      * 踩、取消踩(文章)
      *
      * @Author huaixiu.zhen
