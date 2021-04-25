@@ -12,4 +12,32 @@ class UsersFollow extends Model
     protected $fillable = [
         'master_user_id', 'following_user_id', 'both_status',
     ];
+
+    /**
+     * 文章预加载用户信息
+     *
+     * @Author huaixiu.zhen
+     * http://litblc.com
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function userFollow()
+    {
+        return $this->belongsTo('App\Models\User', 'master_user_id', 'id')
+            ->select(['id', 'uuid', 'name', 'avatar', 'bio']);
+    }
+
+    /**
+     * 文章预加载用户信息
+     *
+     * @Author huaixiu.zhen
+     * http://litblc.com
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function userFans()
+    {
+        return $this->belongsTo('App\Models\User', 'following_user_id', 'id')
+            ->select(['id', 'uuid', 'name', 'avatar', 'bio']);
+    }
 }

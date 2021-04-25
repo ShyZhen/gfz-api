@@ -311,6 +311,11 @@ class UserService extends Service
 
                 // 取关操作
                 if ($follow) {
+                    // 查看是否互关状态
+                    if ($follow->both_status == 'yes') {
+                        $this->usersFollowRepository->updateFollowStatus($user->id, $currId, 'none');
+                    }
+
                     $follow->delete();
                     // 更新数据库计数
                     $this->updateFansAndFollowNum($mine, $user, 'cancel');
@@ -333,17 +338,24 @@ class UserService extends Service
                         );
                     } else {
                         // 查看他是否已经关注了我
+                        $youFollowedMe = $this->usersFollowRepository->isFollowed($user->id, $currId);
 
+                        $bothStatus = $youFollowedMe ? 'yes' : 'none';
                         $createFollow = $this->usersFollowRepository->create([
                             'master_user_id' => $user->id,
                             'following_user_id' => $currId,
+                            'both_status' => $bothStatus,
                         ]);
 
-                        if ($createFollow) {
-                            // 更新数据库计数
-                            $this->updateFansAndFollowNum($mine, $user, '');
-                            $msg = __('app.already') . __('app.follow');
+                        // 如果他已经关注了我，则修改双方状态为互关
+                        if ($createFollow && $youFollowedMe) {
+                            $youFollowedMe->both_status = $bothStatus;
+                            $youFollowedMe->save();
                         }
+
+                        // 更新数据库计数
+                        $this->updateFansAndFollowNum($mine, $user, '');
+                        $msg = __('app.already') . __('app.follow');
                     }
                 }
 
@@ -424,12 +436,22 @@ class UserService extends Service
 
             // 看别人
             if ($user->id != $currId) {
+
+                // 找到这些人中 也同时关注了我的 (先注释，优化性能)
+                $myFansArr = $this->usersFollowRepository->getSomeoneFansByIdArr($currId, $userFollowsIdArr);
                 // 找到这些人中 我同时关注了的
                 $myFollowedArr = $this->usersFollowRepository->getSomeoneFollowsByIdArr($currId, $userFollowsIdArr);
 
                 foreach ($userFollowsList as &$userFollow) {
                     $userFollow->inMyFans = (bool) false;
                     $userFollow->inMyFollows = (bool) false;
+
+                    // 同时关注了我 (先注释，优化性能)
+                    foreach ($myFansArr as $myFans) {
+                        if ($myFans->following_user_id == $userFollow->id) {
+                            $userFollow->inMyFans = (bool) true;
+                        }
+                    }
 
                     // 我同时关注了他（她）
                     foreach ($myFollowedArr as $myFollower) {
@@ -441,9 +463,20 @@ class UserService extends Service
                 unset($userFollow);
             } else {
                 // 看的是自己
+                // 查看状态是否互粉，即可知道他们关注我没有
+                foreach ($userFollowsList as &$userFollow) {
+                    foreach ($userFollows as $userFollowerItem) {
+                        if ($userFollow->id == $userFollowerItem->master_user_id) {
+                            $userFollow->both_status = $userFollowerItem->both_status;
+                        }
+                    }
+                }
+                unset($userFollow);
 
+                // 最终遍历数据，减少数据库请求
                 foreach ($userFollowsList as &$userFollow) {
                     $userFollow->inMyFollows = true;
+                    $userFollow->inMyFans = $userFollow->both_status == 'yes' ? true : false;
                     unset($userFollow->both_status);
                 }
                 unset($userFollow);
@@ -488,21 +521,53 @@ class UserService extends Service
             $userFansIdArr = $userFans->pluck('following_user_id');
             $userFansList = $this->userRepository->getUsersByIdArr($userFansIdArr);
 
-            // 找到这些人中 我同时关注了的
-            $myFollowedArr = $this->usersFollowRepository->getSomeoneFollowsByIdArr($currId, $userFansIdArr);
+            // 看别人
+            if ($user->id != $currId) {
 
-            foreach ($userFansList as &$userFan) {
-                $userFan->inMyFans = (bool) false;
-                $userFan->inMyFollows = (bool) false;
+                // 找到这些人中 也同时关注了我的 (先注释，优化性能)
+                $myFansArr = $this->usersFollowRepository->getSomeoneFansByIdArr($currId, $userFansIdArr);
+                // 找到这些人中 我同时关注了的
+                $myFollowedArr = $this->usersFollowRepository->getSomeoneFollowsByIdArr($currId, $userFansIdArr);
 
-                // 我同时关注了他（她）
-                foreach ($myFollowedArr as $myFollower) {
-                    if ($myFollower->master_user_id == $userFan->id) {
-                        $userFan->inMyFollows = (bool) true;
+                foreach ($userFansList as &$userFan) {
+                    $userFan->inMyFans = (bool) false;
+                    $userFan->inMyFollows = (bool) false;
+
+                    // 同时关注了我 (先注释，优化性能)
+                    foreach ($myFansArr as $myFan) {
+                        if ($myFan->following_user_id == $userFan->id) {
+                            $userFan->inMyFans = (bool) true;
+                        }
+                    }
+
+                    // 我同时关注了他（她）
+                    foreach ($myFollowedArr as $myFollower) {
+                        if ($myFollower->master_user_id == $userFan->id) {
+                            $userFan->inMyFollows = (bool) true;
+                        }
                     }
                 }
+                unset($userFan);
+            } else {
+                // 看的是自己
+                // 查看状态是否互粉，即可知道他们关注我没有
+                foreach ($userFansList as &$userFan) {
+                    foreach ($userFans as $userFanItem) {
+                        if ($userFan->id == $userFanItem->following_user_id) {
+                            $userFan->both_status = $userFanItem->both_status;
+                        }
+                    }
+                }
+                unset($userFan);
+
+                // 最终遍历数据，减少数据库请求
+                foreach ($userFansList as &$userFan) {
+                    $userFan->inMyFollows = $userFan->both_status == 'yes' ? true : false;
+                    $userFan->inMyFans = true;
+                    unset($userFan->both_status);
+                }
+                unset($userFan);
             }
-            unset($userFan);
 
             return response()->json(
                 ['data' => $userFansList],
