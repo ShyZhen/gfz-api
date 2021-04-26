@@ -26,21 +26,26 @@ class AuthService extends Service
 
     private $userRepository;
 
+    private $securityCheckService;
+
     /**
      * AuthService constructor.
      *
      * @param RedisService   $redisService
      * @param EmailService   $emailService
      * @param UserRepository $userRepository
+     * @param SecurityCheckService $securityCheckService
      */
     public function __construct(
         RedisService $redisService,
         EmailService $emailService,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        SecurityCheckService $securityCheckService
     ) {
         $this->redisService = $redisService;
         $this->emailService = $emailService;
         $this->userRepository = $userRepository;
+        $this->securityCheckService = $securityCheckService;
     }
 
     /**
@@ -362,8 +367,16 @@ class AuthService extends Service
      */
     public function updateMyInfo(array $data)
     {
-        $user = Auth::user();
+        if ($data['bio']) {
+            if (!$this->securityCheckService->stringCheck($data['bio'])) {
+                return response()->json(
+                    ['message' => __('app.has_sensitive_words')],
+                    Response::HTTP_UNPROCESSABLE_ENTITY
+                );
+            }
+        }
 
+        $user = Auth::user();
         if ($this->userRepository->update($data, $user->id)) {
             return response()->json(
                 ['data' => $this->userRepository->find($user->id)],
@@ -389,11 +402,20 @@ class AuthService extends Service
      */
     public function updateMyName($name)
     {
-        $user = Auth::user();
+        if ($name) {
+            if (!$this->securityCheckService->stringCheck($name)) {
+                return response()->json(
+                    ['message' => __('app.has_sensitive_words')],
+                    Response::HTTP_UNPROCESSABLE_ENTITY
+                );
+            }
+        }
 
+        $user = Auth::user();
         if ($user->is_rename == 'yes') {
             $user->name = $name;
-            $user->is_rename = 'none';
+            // 重复改名
+            // $user->is_rename = 'none';
 
             if ($user->save()) {
                 return response()->json(
