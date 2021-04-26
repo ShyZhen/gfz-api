@@ -389,8 +389,8 @@ class TimelineService extends Service
             ]);
 
             if ($post) {
-                // 写入限制 1分钟一次
-                $this->redisService->setRedis('report:user:' . $userId, 'create', 'EX', 60);
+                // 写入限制 5分钟一次
+                $this->redisService->setRedis('report:user:' . $userId, 'create', 'EX', 300);
 
                 return response()->json(
                     ['data' => $uuid],
