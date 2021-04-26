@@ -32,6 +32,8 @@ class TimelineService extends Service
 
     private $securityCheckService;
 
+    private $adminIds = [1, 2];
+
     /**
      * @param TimelineRepository   $timelineRepository
      * @param RedisService         $redisService
@@ -343,6 +345,11 @@ class TimelineService extends Service
             ]);
 
             if ($report) {
+                // id=1的是自己（管理员）举报直接软删除
+                if (in_array($userId, $this->adminIds)) {
+                    $post->deleted = 'yes';
+                    $post->save();
+                }
                 return response()->json(
                     ['data' => $report],
                     Response::HTTP_OK
