@@ -154,5 +154,7 @@ Route::prefix('V1')->namespace('Api\V1')->middleware(['auth:api'])->group(functi
     Route::post('like/timeline/{uuid}', 'ActionController@likeTimeline');
     Route::post('dislike/timeline/{uuid}', 'ActionController@dislikeTimeline');
     Route::get('status/timeline/{uuid}', 'ActionController@statusTimeline');
+    // 问题与反馈
+    Route::post('report', 'TimelineController@reportApp');
     #################################↑↑干饭组相关↑↑###################################
 });

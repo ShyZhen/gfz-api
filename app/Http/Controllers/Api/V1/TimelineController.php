@@ -124,4 +124,19 @@ class TimelineController extends Controller
     {
         return $this->timelineService->report($uuid);
     }
+
+    /**
+     * 问题和反馈
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function reportApp(Request $request)
+    {
+        return $this->timelineService->reportApp(
+            $request->get('content'),
+            json_encode($request->get('poster_list'))
+        );
+    }
 }

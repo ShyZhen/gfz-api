@@ -16,6 +16,7 @@ use App\Services\BaseService\RedisService;
 use App\Repositories\Eloquent\UserRepository;
 use App\Repositories\Eloquent\ReportRepository;
 use App\Repositories\Eloquent\TimelineRepository;
+use App\Repositories\Eloquent\ReportAppRepository;
 
 class TimelineService extends Service
 {
@@ -27,6 +28,8 @@ class TimelineService extends Service
 
     private $reportRepository;
 
+    private $reportAppRepository;
+
     private $securityCheckService;
 
     /**
@@ -34,6 +37,7 @@ class TimelineService extends Service
      * @param RedisService         $redisService
      * @param UserRepository       $userRepository
      * @param ReportRepository     $reportRepository
+     * @param ReportAppRepository  $reportAppRepository
      * @param SecurityCheckService $securityCheckService
      */
     public function __construct(
@@ -41,12 +45,14 @@ class TimelineService extends Service
         RedisService $redisService,
         UserRepository $userRepository,
         ReportRepository $reportRepository,
-        SecurityCheckService $securityCheckService
+        SecurityCheckService $securityCheckService,
+        ReportAppRepository $reportAppRepository
     ) {
         $this->timelineRepository = $timelineRepository;
         $this->redisService = $redisService;
         $this->userRepository = $userRepository;
         $this->reportRepository = $reportRepository;
+        $this->reportAppRepository = $reportAppRepository;
         $this->securityCheckService = $securityCheckService;
     }
 
@@ -354,4 +360,49 @@ class TimelineService extends Service
             Response::HTTP_NOT_FOUND
         );
     }
+
+    public function reportApp($content, $posterList)
+    {
+        $userId = Auth::id();
+
+        if ($this->redisService->isRedisExists('report:user:' . $userId)) {
+            return response()->json(
+                ['message' => __('app.action_ttl') . $this->redisService->getRedisTtl('report:user:' . $userId) . 's'],
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+        } else {
+            // 敏感词校验
+            if ($content) {
+                if (!$this->securityCheckService->stringCheck($content)) {
+                    return response()->json(
+                        ['message' => __('app.has_sensitive_words')],
+                        Response::HTTP_UNPROCESSABLE_ENTITY
+                    );
+                }
+            }
+
+            $uuid = self::uuid('timeline-');
+            $post = $this->reportAppRepository->create([
+                'user_id' => $userId,
+                'content' => $content,
+                'poster_list' => $posterList,
+            ]);
+
+            if ($post) {
+                // 写入限制 1分钟一次
+                $this->redisService->setRedis('report:user:' . $userId, 'create', 'EX', 60);
+
+                return response()->json(
+                    ['data' => $uuid],
+                    Response::HTTP_CREATED
+                );
+            }
+
+            return response()->json(
+                ['message' => __('app.try_again')],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+    }
+
 }
