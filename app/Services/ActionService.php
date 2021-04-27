@@ -152,7 +152,7 @@ class ActionService extends Service
             }
 
             return response()->json(
-                ['message' => __('app.collect') . __('app.success')],
+                ['message' => __('app.already') . __('app.collect')],
                 Response::HTTP_OK
             );
         } else {
@@ -188,7 +188,7 @@ class ActionService extends Service
             }
 
             return response()->json(
-                ['message' => __('app.cancel') . __('app.collect') . __('app.success')],
+                ['message' => __('app.cancel') . __('app.collect')],
                 Response::HTTP_OK
             );
         } else {
@@ -238,13 +238,13 @@ class ActionService extends Service
                 $this->postsCommentsLikeRepository->deleteAction($pivot->id);
                 $resource->$field -= 1;
                 $resource->save();
-                $message = __('app.cancel') . __('app.success');
+                $message = __('app.already') . __('app.cancel');
             } else {
                 // 生成
                 $this->postsCommentsLikeRepository->makeAction($resource->id, $type, $resourceType);
                 $resource->$field += 1;
                 $resource->save();
-                $message = __('app.success');
+                $message = __('app.'.$type) . __('app.success');
             }
 
             return response()->json(
