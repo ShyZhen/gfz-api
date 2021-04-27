@@ -50,6 +50,11 @@ class FmockInstall extends Command
             $this->call('passport:install');
             $this->call('db:seed');
             $this->info('===== FMock Install End =====');
+
+            // 安装laravel-admin
+            $this->info('===== laravel admin init =====');
+            $this->call('admin:install');
+            $this->info('===== finish =====');
         }
     }
 }
