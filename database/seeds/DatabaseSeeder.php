@@ -23,5 +23,7 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt(time()),
             'name' => 'Administrator',
         ]);
+
+        $this->call(LaravelAdminMenuSeeder::class);
     }
 }
