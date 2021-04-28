@@ -10,7 +10,7 @@ class Timeline extends Model
     protected $table = 'timelines';
 
     protected $fillable = [
-        'title', 'poster_list', 'user_id', 'uuid',
+        'title', 'poster_list', 'user_id', 'uuid', 'collect_num', 'comment_num', 'like_num', 'dislike_num'
     ];
 
     /**

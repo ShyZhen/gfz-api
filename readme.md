@@ -57,6 +57,8 @@ FMock墨客社区。
  #### 4.异步、消息队列开启(目前仅有发送短信、邮件封装了redis队列，QueueStart=true时必须执行)
  - ~~使用redis做队列：`php artisan queue:work redis --queue=FMockTestQueue,sendSmsQueue --daemon --quiet --delay=3 --sleep=3 --tries=3`~~
 
+ #### 5.导入后台管理数据（可选，主要是针对性的一些目录，可以自己调）
+ - laravel_admin_menu.sql
  
 ## ES Quick Use
  #### Code Info
