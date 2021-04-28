@@ -3,9 +3,6 @@
 	<a href="https://github.styleci.io/repos/145133991">
         <img src="https://github.styleci.io/repos/145133991/shield" alt="StyleCI">
     </a>
-    <a href="https://travis-ci.org/ShyZhen/fmock">
-        <img src="https://travis-ci.org/ShyZhen/fmock.svg?branch=master" alt="Build Status">
-    </a>
     <a href="#">
         <img src="https://img.shields.io/github/license/mashape/apistatus.svg" alt="License">
     </a>
@@ -18,13 +15,10 @@
 ## About FMock
 A forums build with laravel.
 
-FMock墨客社区。
-> 客户端项目地址 https://github.com/ShyZhen/fmock-uniapp
-
 
 ## Environment
  > 必要
- - PHP >= 7.2.5
+ - PHP >= 7.4
  - Mysql
  - Redis
  
@@ -39,7 +33,6 @@ FMock墨客社区。
 ## Installation
 
  #### 1.下载代码安装依赖
- - `git clone https://github.com/ShyZhen/fmock.git`
  - 创建项目数据库
  - `copy .env.example .env` and edit .env
  > 除了基本的APP配置、数据库配置、以及redis缓存配置（前四个代码块），仍需配置Smtp 邮箱服务、Sms短信服务、Github OAuth 第三方登录。
@@ -56,9 +49,6 @@ FMock墨客社区。
  
  #### 4.异步、消息队列开启(目前仅有发送短信、邮件封装了redis队列，QueueStart=true时必须执行)
  - ~~使用redis做队列：`php artisan queue:work redis --queue=FMockTestQueue,sendSmsQueue --daemon --quiet --delay=3 --sleep=3 --tries=3`~~
-
- #### 5.导入后台管理数据（可选，主要是针对性的一些目录，可以自己调）
- - laravel_admin_menu.sql
  
 ## ES Quick Use
  #### Code Info

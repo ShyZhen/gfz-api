@@ -26,13 +26,13 @@ class UserController extends AdminController
     {
         $table = new Table(new User());
 
-        $table->column('id', __('ID'));
+        $table->column('id', __('ID'))->sortable();
 //        $table->column('uuid', __('Uuid'));
 //        $table->column('email', __('Email'));
         $table->column('mobile', __('手机'));
 //        $table->column('password', __('Password'));
 //        $table->column('remember_token', __('Remember token'));
-        $table->column('name', __('昵称'));
+        $table->column('name', __('昵称'))->width(200);
 //        $table->column('avatar', __('头像'));
         $table->column('gender', __('性别'));
         $table->column('birthday', __('生日'));
@@ -51,7 +51,7 @@ class UserController extends AdminController
 //        $table->column('github', __('Github'));
 //        $table->column('github_id', __('Github id'));
 //        $table->column('wechat_openid', __('Wechat openid'));
-        $table->column('created_at', __('创建'));
+        $table->column('created_at', __('创建'))->sortable();
 //        $table->column('updated_at', __('更新'));
 
         return $table;

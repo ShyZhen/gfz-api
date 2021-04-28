@@ -15,7 +15,7 @@ class CreateTimelinesTable extends Migration
     {
         // 朋友圈、微博那种图文，非富文本类型
         Schema::create('timelines', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->string('uuid', 64)->index();   // 代替id暴露在外
             $table->unsignedInteger('user_id')->index();
             $table->string('title', 255)->default('');

@@ -26,9 +26,9 @@ class ReportAppController extends AdminController
     {
         $table = new Table(new ReportApp());
 
-        $table->column('id', __('Id'));
+        $table->column('id', __('Id'))->sortable();
         $table->column('user_id', __('User id'));
-        $table->column('content', __('Content'));
+        $table->column('content', __('Content'))->width(200);
         $table->column('poster_list', __('Poster list'))->display(function ($posterList) {
             $temp = json_decode($posterList);
             $html = '<div style="display: flex">';
@@ -38,8 +38,8 @@ class ReportAppController extends AdminController
 
             return $html.'</div>';
         });
-        $table->column('created_at', __('Created at'));
-        $table->column('updated_at', __('Updated at'));
+        $table->column('created_at', __('Created at'))->sortable();
+//        $table->column('updated_at', __('Updated at'));
 
         return $table;
     }

@@ -26,17 +26,17 @@ class CommentController extends AdminController
     {
         $table = new Table(new Comment());
 
-        $table->column('id', __('Id'));
+        $table->column('id', __('Id'))->sortable();
         $table->column('type', __('Type'));
 //        $table->column('resource_uuid', __('Resource uuid'));
         $table->column('resource_id', __('Resource id'));
         $table->column('parent_id', __('Parent id'));
         $table->column('user_id', __('User id'));
-        $table->column('content', __('Content'));
+        $table->column('content', __('Content'))->width(400);
         $table->column('like_num', __('Like num'));
         $table->column('dislike_num', __('Dislike num'));
 //        $table->column('deleted', __('Deleted'));
-        $table->column('created_at', __('Created at'));
+        $table->column('created_at', __('Created at'))->sortable();
 //        $table->column('updated_at', __('Updated at'));
 
         return $table;

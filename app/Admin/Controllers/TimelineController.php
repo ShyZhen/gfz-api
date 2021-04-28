@@ -26,25 +26,27 @@ class TimelineController extends AdminController
     {
         $table = new Table(new Timeline());
 
-        $table->column('id', __('Id'));
+        $table->column('id', __('Id'))->sortable();
 //        $table->column('uuid', __('Uuid'));
         $table->column('user_id', __('用户ID'));
-        $table->column('title', __('Title'));
+        $table->column('title', __('Title'))->width(200);
         $table->column('poster_list', __('Poster list'))->display(function ($posterList) {
-            $temp = json_decode($posterList);
-            $html = '<div style="display: flex">';
-            foreach ($temp as $url) {
-                $html .= "<img src='$url' style='width: 100px'>";
-            }
+            if ($posterList) {
+                $temp = json_decode($posterList);
+                $html = '<div style="display: flex">';
+                foreach ($temp as $url) {
+                    $html .= "<img src='$url' style='width: 100px'>";
+                }
 
-            return $html.'</div>';
+                return $html.'</div>';
+            }
         });
         $table->column('collect_num', __('Collect num'));
         $table->column('comment_num', __('Comment num'));
         $table->column('like_num', __('Like num'));
         $table->column('dislike_num', __('Dislike num'));
 //        $table->column('deleted', __('Deleted'));
-        $table->column('created_at', __('Created at'));
+        $table->column('created_at', __('Created at'))->sortable();
 //        $table->column('updated_at', __('Updated at'));
 
         return $table;

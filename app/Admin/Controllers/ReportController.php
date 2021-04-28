@@ -26,12 +26,12 @@ class ReportController extends AdminController
     {
         $table = new Table(new Report());
 
-        $table->column('id', __('ID'));
+        $table->column('id', __('ID'))->sortable();
         $table->column('user_id', __('用户ID'));
         $table->column('resource_id', __('资源ID'));
         $table->column('reason', __('理由'));
         $table->column('type', __('类型'));
-        $table->column('created_at', __('Created at'));
+        $table->column('created_at', __('Created at'))->sortable();
 
         return $table;
     }
