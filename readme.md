@@ -30,24 +30,7 @@ A forums build with laravel.
  - RabbitMQ
 
 
-## Installation
-
- #### 1.下载代码安装依赖
- - 创建项目数据库
- - `copy .env.example .env` and edit .env
- > 除了基本的APP配置、数据库配置、以及redis缓存配置（前四个代码块），仍需配置Smtp 邮箱服务、Sms短信服务、Github OAuth 第三方登录。
- > 根据自己vhost配置 `APP_URL` `CLIENT_URL` `SERVER_URL` `ADMIN_URL`
- > 如果想上传文件到七牛，需要开启`.env`中的`QiniuService=true`,并配置好七牛的各项参数。
- - composer 全量镜像不稳定，推荐更换`composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/`
- - `composer self-update` && `composer install`
- 
- #### 2. 执行初始化安装
- - `php artisan fmock:install`
- 
- #### 3. 权限设置
- - `chmod -R 766 storage/ && chmod -R 766 bootstrap/cache/` 根据自己实际用户组情况设置777或者766
- 
- #### 4.异步、消息队列开启(目前仅有发送短信、邮件封装了redis队列，QueueStart=true时必须执行)
+## 异步、消息队列开启(目前仅有发送短信、邮件封装了redis队列，QueueStart=true时必须执行)
  - ~~使用redis做队列：`php artisan queue:work redis --queue=FMockTestQueue,sendSmsQueue --daemon --quiet --delay=3 --sleep=3 --tries=3`~~
  
 ## ES Quick Use
