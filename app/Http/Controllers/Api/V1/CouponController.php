@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\Coupon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
@@ -74,6 +75,34 @@ class CouponController extends Controller
 
         return response()->json(
             ['data' => $coupons],
+            Response::HTTP_OK
+        );
+    }
+
+
+    /**
+     * 数据库返回红包数据
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getCouponsNew(): \Illuminate\Http\JsonResponse
+    {
+        $res = [];
+        $coupons = Coupon::all();
+        foreach ($coupons as $coupon) {
+            $temp['id'] = $coupon['id'];
+            $temp['name'] = $coupon['name'];
+            $temp['icon'] = $coupon['icon'];
+            $temp['bannerPic'] = $coupon['banner_pic'];
+            $temp['url'] = $coupon['url'];
+            $temp['minapp']['appid'] = $coupon['app_id'];
+            $temp['minapp']['path'] = $coupon['path'];
+            $temp['originImage'] = $coupon['origin_image'];
+            $res[] = $temp;
+        }
+
+        return response()->json(
+            ['data' => $res],
             Response::HTTP_OK
         );
     }

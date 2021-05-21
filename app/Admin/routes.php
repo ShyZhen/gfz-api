@@ -17,4 +17,5 @@ Route::group([
     $router->resource('reports', ReportController::class);
     $router->resource('report-apps', ReportAppController::class);
     $router->resource('comments', CommentController::class);
+    $router->resource('coupons', CouponController::class);
 });

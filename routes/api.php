@@ -54,6 +54,7 @@ Route::prefix('V1')->namespace('Api\V1')->group(function () {
     Route::post('login-code', 'AuthController@quickLoginCode');
     Route::post('login-quick', 'AuthController@quickLogin');
     Route::get('coupons', 'CouponController@getCoupons');
+    Route::get('coupons-new', 'CouponController@getCouponsNew');
 
     Route::prefix('timeline')->group(function () {
         Route::get('list/{type}', 'TimelineController@getAllTimelines');
