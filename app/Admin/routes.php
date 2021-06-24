@@ -18,4 +18,6 @@ Route::group([
     $router->resource('report-apps', ReportAppController::class);
     $router->resource('comments', CommentController::class);
     $router->resource('coupons', CouponController::class);
+    $router->resource('m-p-video-items', MPVideoController::class);
+
 });
