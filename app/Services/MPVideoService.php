@@ -50,4 +50,16 @@ class MPVideoService extends Service
             Response::HTTP_OK
         );
     }
+
+    public function getScroll($type, $vid): \Illuminate\Http\JsonResponse
+    {
+        $data['pre_video'] = [];
+        $data['current'] = [];
+        $data['after_video'] = [];
+
+        return response()->json(
+            ['data' => $data],
+            Response::HTTP_OK
+        );
+    }
 }

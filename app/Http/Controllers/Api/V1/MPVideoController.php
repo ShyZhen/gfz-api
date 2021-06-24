@@ -38,5 +38,10 @@ class MPVideoController extends Controller
         return $res;
     }
 
+    public function getScroll($type, $vid): \Illuminate\Http\JsonResponse
+    {
+        return $this->mpVideoService->getScroll($type, $vid);
+    }
+
 
 }

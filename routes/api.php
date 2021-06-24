@@ -65,7 +65,7 @@ Route::prefix('V1')->namespace('Api\V1')->group(function () {
     #################################↓↓腾讯视频插件小程序↓↓###################################
     Route::prefix('mpvideo')->group(function () {
         Route::get('list/{type}', 'MPVideoController@getList');
-        Route::get('detail/{uuid}', 'MPVideoController@getScroll');
+        Route::get('detail/{type}/{uuid}', 'MPVideoController@getScroll');
     });
     ################################↑↑腾讯视频插件小程序↑↑###################################
 });
