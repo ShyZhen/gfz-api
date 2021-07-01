@@ -42,7 +42,7 @@ class MPVideoService extends Service
     {
         $data = $this->mpVideoItemRepository->model()
             ::where('type', '<>', '')
-            ->orderByDesc('created_at')
+            ->orderByDesc('id')
             ->paginate(env('PER_PAGE', 10));
 
         return response()->json(
@@ -51,11 +51,18 @@ class MPVideoService extends Service
         );
     }
 
-    public function getScroll($type, $vid): \Illuminate\Http\JsonResponse
+    public function getScroll($type, $id): \Illuminate\Http\JsonResponse
     {
-        $data['pre_video'] = [];
-        $data['current'] = [];
-        $data['after_video'] = [];
+        $data['current'] = $this->mpVideoItemRepository->find($id);
+        if ($type == 1) {
+            // ↑前10后3
+            $data['pre_video'] = $this->mpVideoItemRepository->get10Items(1, $id, 10);
+            $data['after_video'] = $this->mpVideoItemRepository->get10Items(2, $id, 3);
+        } else {
+            // ↓前3后10
+            $data['pre_video'] = $this->mpVideoItemRepository->get10Items(1, $id, 3);
+            $data['after_video'] = $this->mpVideoItemRepository->get10Items(2, $id, 10);
+        }
 
         return response()->json(
             ['data' => $data],

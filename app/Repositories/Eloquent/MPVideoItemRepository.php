@@ -23,4 +23,35 @@ class MPVideoItemRepository extends Repository
     {
         return 'App\Models\MPVideoItem';
     }
+
+    /**
+     * 获取前$limit或者后$limit
+     *
+     * @param $type
+     * @param $id
+     * @param $limit
+     * @return mixed
+     */
+    public function get10Items($type, $id, $limit)
+    {
+        // 前
+        if ($type == 1) {
+            $res = $this->model
+                ->select('*')
+                ->where('id', '>', $id)
+                ->orderBy('id')
+                ->limit($limit)
+                ->get();
+        } else {
+            // 后 (后面是旧的)
+            $res = $this->model
+                ->select('*')
+                ->where('id', '<', $id)
+                ->orderByDesc('id')
+                ->limit($limit)
+                ->get();
+        }
+        return $res;
+    }
+
 }
