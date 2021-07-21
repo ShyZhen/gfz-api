@@ -30,8 +30,27 @@ A forums build with laravel.
  - RabbitMQ
 
 
-## 异步、消息队列开启(目前仅有发送短信、邮件封装了redis队列，QueueStart=true时必须执行)
+## Installation
+
+ #### 1.下载代码安装依赖
+ - `git clone https://github.com/ShyZhen/fmock.git`
+ - 创建项目数据库
+ - `copy .env.example .env` and edit .env
+ > 除了基本的APP配置、数据库配置、以及redis缓存配置（前四个代码块），仍需配置Smtp 邮箱服务、Sms短信服务、Github OAuth 第三方登录。
+ > 根据自己vhost配置 `APP_URL` `CLIENT_URL` `SERVER_URL` `ADMIN_URL`
+ > 如果想上传文件到七牛，需要开启`.env`中的`QiniuService=true`,并配置好七牛的各项参数。
+ - composer 全量镜像不稳定，推荐更换`composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/`
+ - `composer self-update` && `composer install`
+ 
+ #### 2. 执行初始化安装
+ - `php artisan fmock:install`
+ 
+ #### 3. 权限设置
+ - `chmod -R 766 storage/ && chmod -R 766 bootstrap/cache/` 根据自己实际用户组情况设置777或者766
+ 
+ #### 4.异步、消息队列开启(目前仅有发送短信、邮件封装了redis队列，QueueStart=true时必须执行)
  - ~~使用redis做队列：`php artisan queue:work redis --queue=FMockTestQueue,sendSmsQueue --daemon --quiet --delay=3 --sleep=3 --tries=3`~~
+ 
  
 ## ES Quick Use
  #### Code Info
@@ -63,6 +82,7 @@ A forums build with laravel.
  #### Consume Callback
  - 启动消费脚本之后，所有的回调逻辑处理函数全部在`app\Library\RabbitMQ\RabbitMQHandle.php`文件中，你只需要更新此处即可
 
+
 ## API Info
 
  - 支持邮箱、手机号sms（阿里短信服务）验证码发送，以及完善的正则匹配
@@ -82,12 +102,14 @@ A forums build with laravel.
  - 支持ElasticSearch，使用Observer自动插入ES数据
  - 支持短视频上传七牛并切片、添加水印等操作（记得更新相关文件上传配置,例如nginx的client_body_temp/client_body_buffer_size 10/client_max_body_size 1024m）
 
+
 ## Other file
 
  - 代码结构
  ![代码结构](/doc/other/code.jpg)
  - [Postman合集(仅供参考)](/doc/other/Fmock.postman_collection.json)
  - [rp原型](/doc/other/fmock.rp)
+
 
 ## API Index
 ### [登录注册](/doc/auth.md)
@@ -160,12 +182,15 @@ A forums build with laravel.
 - [获取文章评论](/doc/comment.md#post-comment)
 - [创建评论、回复](/doc/comment.md#create-post-comment)
 - [删除自己的评论、回复](/doc/comment.md#delete-post-comment)
- 
+
+
 ## [Admin管理后台](/doc/admin.md)
- 
+
+
 ## Security Vulnerabilities
 
 If you discover a security vulnerability within FMock, please send an e-mail to huaixiu.zhen via [huaixiu.zhen@gmail.com](mailto:huaixiu.zhen@gmail.com). All security vulnerabilities will be promptly addressed.
+
 
 ## License
 

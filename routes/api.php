@@ -166,4 +166,11 @@ Route::prefix('V1')->namespace('Api\V1')->middleware(['auth:api'])->group(functi
     // 问题与反馈
     Route::post('report', 'TimelineController@reportApp');
     #################################↑↑干饭组相关↑↑###################################
+
+    #################################↓↓王者荣耀小程序↓↓###################################
+    Route::prefix('mpwangzhe/')->group(function () {
+        Route::get('skin', 'MPWangzheController@getMySkin');
+        Route::put('skin/{type}', 'MPWangzheController@updateOtherSetSkin');
+    });
+    ################################↑↑王者荣耀小程序↑↑###################################
 });
