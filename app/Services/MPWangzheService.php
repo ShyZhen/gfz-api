@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use App\Services\BaseService\RedisService;
+use App\Repositories\Eloquent\MPWangzheDrawRepository;
 use App\Repositories\Eloquent\MPWangzheSkinRepository;
 use App\Repositories\Eloquent\MPWangzheSkinLogRepository;
 
@@ -35,29 +36,33 @@ class MPWangzheService extends Service
         'used' => 9,
     ];
 
-    // 对应操作的最大有效次数
+    // 对应操作类型 每天 的有效次数
     const LIMIT = [
         '1' => 1,  // register
         '2' => 1,  // login
         '3' => 3,  // share
-        '4' => 5,  // ad
+        '4' => 3,  // ad
     ];
 
     private $redisService;
+    private $mPWangzheDrawRepository;
     private $mPWangzheSkinRepository;
     private $mPWangzheSkinLogRepository;
 
     /**
      * @param RedisService $redisService
+     * @param MPWangzheDrawRepository $mPWangzheDrawRepository
      * @param MPWangzheSkinRepository $mPWangzheSkinRepository
      * @param MPWangzheSkinLogRepository $mPWangzheSkinLogRepository
      */
     public function __construct(
         RedisService $redisService,
+        MPWangzheDrawRepository $mPWangzheDrawRepository,
         MPWangzheSkinRepository $mPWangzheSkinRepository,
         MPWangzheSkinLogRepository $mPWangzheSkinLogRepository
     ) {
         $this->redisService = $redisService;
+        $this->mPWangzheDrawRepository = $mPWangzheDrawRepository;
         $this->mPWangzheSkinRepository = $mPWangzheSkinRepository;
         $this->mPWangzheSkinLogRepository = $mPWangzheSkinLogRepository;
     }
@@ -124,7 +129,7 @@ class MPWangzheService extends Service
     }
 
     /**
-     * 其他更新碎片的动作
+     * 其他更新碎片的动作（除了注册）
      *
      * @param $skin
      * @param $num
@@ -202,4 +207,24 @@ class MPWangzheService extends Service
             return false;
         }
     }
+
+    /**
+     * 抽奖活动列表（已完成、进行中）
+     *
+     * @param $type
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getDrawList($type): \Illuminate\Http\JsonResponse
+    {
+        $data = $this->mPWangzheDrawRepository->model()
+            ::where('type', $type)
+            ->orderByDesc('created_at')
+            ->paginate(env('PER_PAGE', 10));
+
+        return response()->json(
+            ['data' => $data],
+            Response::HTTP_OK
+        );
+    }
+
 }

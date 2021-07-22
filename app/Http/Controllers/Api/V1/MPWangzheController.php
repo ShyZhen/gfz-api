@@ -52,5 +52,17 @@ class MPWangzheController extends Controller
         }
     }
 
+    /**
+     * 抽奖活动列表（已完成、进行中）
+     *
+     * @param $type
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getDrawList($type): \Illuminate\Http\JsonResponse
+    {
+        return$this->mpWangzheService->getDrawList($type);
+
+    }
+
 
 }

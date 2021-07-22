@@ -68,6 +68,12 @@ Route::prefix('V1')->namespace('Api\V1')->group(function () {
         Route::get('detail/{type}/{uuid}', 'MPVideoController@getScroll');
     });
     ################################↑↑腾讯视频插件小程序↑↑###################################
+
+    #################################↓↓王者荣耀小程序↓↓###################################
+    Route::prefix('mpwangzhe/')->group(function () {
+        Route::get('draw/{type}', 'MPWangzheController@getDrawList');
+    });
+    ################################↑↑王者荣耀小程序↑↑###################################
 });
 
 // need access_token

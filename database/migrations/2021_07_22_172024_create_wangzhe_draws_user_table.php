@@ -4,20 +4,20 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWangzheSkinTable extends Migration
+class CreateWangzheDrawsUserTable extends Migration
 {
     /**
-     * 王者荣耀皮肤碎片的表
+     * 参与抽奖用户表
      * Run the migrations.
      *
      * @return void
      */
     public function up()
     {
-        Schema::create('wangzhe_skin', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedInteger('user_id')->index();
-            $table->unsignedInteger('skin_patch')->default(0);
+        Schema::create('wangzhe_draws_user', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedInteger('user_id');        // 参与的用户ID
+            $table->unsignedInteger('draw_id');        // 抽奖活动ID
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class CreateWangzheSkinTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('wangzhe_skin');
+        Schema::dropIfExists('wangzhe_draws_user');
     }
 }
