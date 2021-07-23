@@ -17,7 +17,7 @@ class CreateWangzheSkinLogTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedInteger('user_id')->index();
             $table->integer('num');         // 数值，可以是负数（兑换的话）
-            $table->tinyInteger('type');    // 操作类型 1注册 2每日登录 3每日分享3个新用户 4每日看5个广告 9兑换
+            $table->tinyInteger('type');    // 操作类型 1注册 2每日登录 3每日分享3个新用户 4每日看5个广告 5点击banner 9兑换
             $table->timestamps();
         });
     }

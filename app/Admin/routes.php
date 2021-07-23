@@ -18,6 +18,13 @@ Route::group([
     $router->resource('report-apps', ReportAppController::class);
     $router->resource('comments', CommentController::class);
     $router->resource('coupons', CouponController::class);
+
+    // 视频小程序
     $router->resource('m-p-video-items', MPVideoController::class);
+
+    // 王者荣耀
+    $router->resource('m-p-wangzhe-draws', MPWZDrawController::class);
+    $router->resource('m-p-wangzhe-skins', MPWZSkinController::class);
+    $router->resource('m-p-wangzhe-skin-logs', MPWZSkinLogController::class);
 
 });

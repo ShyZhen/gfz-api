@@ -26,7 +26,7 @@ class MPVideoController extends AdminController
     {
         $table = new Table(new MPVideoItem());
 
-        $table->column('id', __('Id'))->sortable();;
+        $table->column('id', __('Id'))->sortable();
         $table->column('vid', __('Vid'));
         $table->column('title', __('Title'));
         $table->column('image', __('Image'));

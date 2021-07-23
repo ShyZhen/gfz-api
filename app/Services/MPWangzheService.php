@@ -25,14 +25,16 @@ class MPWangzheService extends Service
         'login' => 2,
         'share' => 5,
         'ad' => 5,
+        'banner' => 5,
     ];
 
-    // 操作类型 1注册 2每日登录 3每日分享3个新用户 4每日看5个广告 9兑换
+    // 操作类型 1注册 2登录 3分享 4看广告 5点击banner 9兑换
     const TYPE = [
         'register' => 1,
         'login' => 2,
         'share' => 3,
         'ad' => 4,
+        'banner' => 5,
         'used' => 9,
     ];
 
@@ -42,6 +44,7 @@ class MPWangzheService extends Service
         '2' => 1,  // login
         '3' => 3,  // share
         '4' => 3,  // ad
+        '5' => 3,  // banner
     ];
 
     private $redisService;
@@ -173,19 +176,20 @@ class MPWangzheService extends Service
      */
     private function updateSkinLimit($skin, $type): bool
     {
+        // 只能执行一次的
+        $onlyOnceType = [self::TYPE['register'], self::TYPE['login']];
+
         // 当天24小时过期
         $expireTime = Carbon::tomorrow()->timestamp - time();
 
         if ($this->redisService->isRedisExists('user:' . $skin->user_id . ':type:' . $type)) {
             $this->redisService->redisIncr('user:' . $skin->user_id . ':type:' . $type);
 
-            // 仅能一次的 直接退出
-            if (in_array($type, [self::TYPE['login']])) {
+            // 仅能一次的 直接退出 不需要计算limit
+            if (in_array($type, $onlyOnceType)) {
                 return true;
-            }
-
-            // 多次的 计算出对应次数进行判断是否超过
-            if (in_array($type, [self::TYPE['share'], self::TYPE['ad']])) {
+            } else {
+                // 多次的 计算出对应次数进行判断是否超过
                 $limit = self::LIMIT[$type];
 
                 if ($this->redisService->getRedis('user:' . $skin->user_id . ':type:' . $type) > $limit) {
