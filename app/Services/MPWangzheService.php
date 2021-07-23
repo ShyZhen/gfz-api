@@ -275,4 +275,18 @@ class MPWangzheService extends Service
         );
     }
 
+    /**
+     * 查看参与了该活动的用户id列表
+     *
+     * @param $id
+     * @return mixed
+     */
+    public function getDrawUserList($id)
+    {
+        return $this->mPWangzheDrawUserRepository->model()
+            ::where('draw_id', $id)
+            ->orderByDesc('created_at')
+            ->paginate(env('PER_PAGE', 10));
+    }
+
 }

@@ -72,6 +72,7 @@ Route::prefix('V1')->namespace('Api\V1')->group(function () {
     #################################↓↓王者荣耀小程序↓↓###################################
     Route::prefix('mpwangzhe/')->group(function () {
         Route::get('draw/{type}', 'MPWangzheController@getDrawList');
+        Route::get('draw-user/{drawId}', 'MPWangzheController@getDrawUserList');
     });
     ################################↑↑王者荣耀小程序↑↑###################################
 });

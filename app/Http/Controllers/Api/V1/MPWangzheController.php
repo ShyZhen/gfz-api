@@ -74,4 +74,15 @@ class MPWangzheController extends Controller
         return $this->mpWangzheService->joinDraw($id);
     }
 
+    /**
+     * 查看参与活动的用户id
+     *
+     * @param $id
+     * @return mixed
+     */
+    public function getDrawUserList($id)
+    {
+        return $this->mpWangzheService->getDrawUserList($id);
+    }
+
 }
