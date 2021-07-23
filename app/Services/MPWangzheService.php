@@ -96,7 +96,7 @@ class MPWangzheService extends Service
     /**
      * 主动动作的碎片更新（除了登录、注册等被动动作）
      *
-     * @param $type [register,login,share,ad ...]
+     * @param $type [share,ad ...]
      * @return mixed
      */
     public function updateOtherSetSkin($type)
@@ -176,33 +176,26 @@ class MPWangzheService extends Service
      */
     private function updateSkinLimit($skin, $type): bool
     {
-        // 只能执行一次的
-        $onlyOnceType = [self::TYPE['register'], self::TYPE['login']];
-
         // 当天24小时过期
         $expireTime = Carbon::tomorrow()->timestamp - time();
 
         if ($this->redisService->isRedisExists('user:' . $skin->user_id . ':type:' . $type)) {
             $this->redisService->redisIncr('user:' . $skin->user_id . ':type:' . $type);
 
-            // 仅能一次的 直接退出 不需要计算limit
-            if (in_array($type, $onlyOnceType)) {
-                return true;
-            } else {
-                // 多次的 计算出对应次数进行判断是否超过
-                $limit = self::LIMIT[$type];
+            // 多次的 计算出对应次数进行判断是否超过
+            $limit = self::LIMIT[$type];
 
-                if ($this->redisService->getRedis('user:' . $skin->user_id . ':type:' . $type) > $limit) {
-                    // 本地环境关闭该限制
-                    /*
-                    if (env('APP_ENV') == 'local') {
-                        return false;
-                    }
-                    */
-
-                    return true;
+            if ($this->redisService->getRedis('user:' . $skin->user_id . ':type:' . $type) > $limit) {
+                // 本地环境关闭该限制
+                /*
+                if (env('APP_ENV') == 'local') {
+                    return false;
                 }
+                */
+
+                return true;
             }
+
 
             return false;
         } else {

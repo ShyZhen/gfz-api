@@ -47,7 +47,7 @@ class MPWangzheController extends Controller
     public function updateOtherSetSkin($type)
     {
         $allowTypes = array_keys($this->mpWangzheService::TYPE);
-        if (in_array($type, $allowTypes)) {
+        if (in_array($type, $allowTypes) && $type !== 'register') {
             return $this->mpWangzheService->updateOtherSetSkin($type);
         }
     }
