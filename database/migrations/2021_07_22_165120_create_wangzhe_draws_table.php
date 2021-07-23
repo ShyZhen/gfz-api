@@ -17,10 +17,11 @@ class CreateWangzheDrawsTable extends Migration
         Schema::create('wangzhe_draws', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedInteger('limit_user')->default(1000);  // 多少人参与后开奖
+            $table->unsignedInteger('join_num')->default(0);  // 当前已有多少人参与
             $table->string('title', 128)->default('');
             $table->string('image', 128)->default('');
             $table->unsignedInteger('winner_id')->default(0);        // 中奖用户ID（只有一个奖）
-            $table->tinyInteger('type')->default(0);     // 0进行中 1已完成
+            $table->tinyInteger('type')->default(0);     // 0进行中 1已结束
             $table->timestamps();
         });
     }

@@ -33,7 +33,7 @@ class MPWangzheController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getMySkin(): \Illuminate\Http\JsonResponse
+    public function getMySkin()
     {
         return $this->mpWangzheService->getMySkin();
     }
@@ -60,9 +60,18 @@ class MPWangzheController extends Controller
      */
     public function getDrawList($type): \Illuminate\Http\JsonResponse
     {
-        return$this->mpWangzheService->getDrawList($type);
-
+        return $this->mpWangzheService->getDrawList($type);
     }
 
+    /**
+     * 参与抽奖
+     *
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function joinDraw($id)
+    {
+        return $this->mpWangzheService->joinDraw($id);
+    }
 
 }

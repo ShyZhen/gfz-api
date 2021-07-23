@@ -16,6 +16,7 @@ use App\Services\BaseService\RedisService;
 use App\Repositories\Eloquent\MPWangzheDrawRepository;
 use App\Repositories\Eloquent\MPWangzheSkinRepository;
 use App\Repositories\Eloquent\MPWangzheSkinLogRepository;
+use App\Repositories\Eloquent\MPWangzheDrawUserRepository;
 
 class MPWangzheService extends Service
 {
@@ -51,23 +52,27 @@ class MPWangzheService extends Service
     private $mPWangzheDrawRepository;
     private $mPWangzheSkinRepository;
     private $mPWangzheSkinLogRepository;
+    private $mPWangzheDrawUserRepository;
 
     /**
      * @param RedisService $redisService
      * @param MPWangzheDrawRepository $mPWangzheDrawRepository
      * @param MPWangzheSkinRepository $mPWangzheSkinRepository
      * @param MPWangzheSkinLogRepository $mPWangzheSkinLogRepository
+     * @param MPWangzheDrawUserRepository $mPWangzheDrawUserRepository
      */
     public function __construct(
         RedisService $redisService,
         MPWangzheDrawRepository $mPWangzheDrawRepository,
         MPWangzheSkinRepository $mPWangzheSkinRepository,
-        MPWangzheSkinLogRepository $mPWangzheSkinLogRepository
+        MPWangzheSkinLogRepository $mPWangzheSkinLogRepository,
+        MPWangzheDrawUserRepository $mPWangzheDrawUserRepository
     ) {
         $this->redisService = $redisService;
         $this->mPWangzheDrawRepository = $mPWangzheDrawRepository;
         $this->mPWangzheSkinRepository = $mPWangzheSkinRepository;
         $this->mPWangzheSkinLogRepository = $mPWangzheSkinLogRepository;
+        $this->mPWangzheDrawUserRepository = $mPWangzheDrawUserRepository;
     }
 
     /**
@@ -104,11 +109,11 @@ class MPWangzheService extends Service
         $userId = Auth::id();
         $skin = $this->mPWangzheSkinRepository->findBy('user_id', $userId);
 
-        $this->updateSkin($skin, self::SKIN[$type], self::TYPE[$type]);
+        $data = $this->updateSkin($skin, self::SKIN[$type], self::TYPE[$type]);
 
         return response()->json(
-            null,
-            Response::HTTP_NO_CONTENT
+            ['data' => $data],
+            Response::HTTP_OK
         );
     }
 
@@ -211,7 +216,7 @@ class MPWangzheService extends Service
      * @param $type
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getDrawList($type): \Illuminate\Http\JsonResponse
+    public function getDrawList($type)
     {
         $data = $this->mPWangzheDrawRepository->model()
             ::where('type', $type)
@@ -221,6 +226,52 @@ class MPWangzheService extends Service
         return response()->json(
             ['data' => $data],
             Response::HTTP_OK
+        );
+    }
+
+    /**
+     * 参与抽奖活动
+     *
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function joinDraw($id)
+    {
+        $userId = Auth::id();
+        $draw = $this->mPWangzheDrawRepository->find($id);
+        if ($draw && $draw->join_num < $draw->limit_user) {
+
+            // 是否参与过
+            $item = $this->mPWangzheDrawUserRepository->model()
+                ::where([
+                    'user_id' => $userId,
+                    'draw_id' => $id,
+                ])
+                ->first();
+
+            if ($item) {
+                return response()->json(
+                    ['message' => __('app.has_already_join')],
+                    Response::HTTP_UNPROCESSABLE_ENTITY
+                );
+            }
+
+            $res = $this->mPWangzheDrawUserRepository->create([
+                'user_id' => $userId,
+                'draw_id' => $id,
+            ]);
+            $draw->join_num += 1;
+            $res && $draw->save();
+
+            return response()->json(
+                null,
+                Response::HTTP_OK
+            );
+        }
+
+        return response()->json(
+            ['message' => __('app.draw_end')],
+            Response::HTTP_UNPROCESSABLE_ENTITY
         );
     }
 

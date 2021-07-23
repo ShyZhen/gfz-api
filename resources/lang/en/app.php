@@ -60,5 +60,7 @@ return [
     'no_videos' => 'There is nothing ',
     'has_report' => 'Has reported ',
     'has_sensitive_words' => 'Has Sensitive Words',
+    'has_already_join' => 'Has Already Joined',
+    'draw_end' => 'Draw End',
 
 ];

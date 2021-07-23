@@ -60,5 +60,7 @@ return [
     'no_videos' => '没有相关视频',
     'has_report' => '您已经举报过啦',
     'has_sensitive_words' => '包含敏感内容',
+    'has_already_join' => '您已经参与过啦',
+    'draw_end' => '活动太火爆已经结束啦',
 
 ];

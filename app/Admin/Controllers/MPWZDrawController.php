@@ -31,7 +31,11 @@ class MPWZDrawController extends AdminController
         $table->column('title', __('Title'));
         $table->column('image', __('Image'));
         $table->column('winner_id', __('Winner id'));
-        $table->column('type', __('Type'));
+        $table->column('type', __('Type'))
+                ->select([
+                    0 => '进行中',
+                    1 => '已结束',
+                ]);
         $table->column('created_at', __('Created at'));
         $table->column('updated_at', __('Updated at'));
 
@@ -71,9 +75,7 @@ class MPWZDrawController extends AdminController
 
         $form->number('limit_user', __('Limit user'))->default(1000);
         $form->text('title', __('Title'));
-        $form->image('image', __('Image'));
-        $form->number('winner_id', __('Winner id'));
-        $form->switch('type', __('Type'));
+        $form->text('image', __('Image'));
 
         return $form;
     }
