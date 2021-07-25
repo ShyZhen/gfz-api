@@ -263,6 +263,16 @@ class MPWangzheService extends Service
             $draw->join_num += 1;
             $res && $draw->save();
 
+            // TODO 人满自动开奖
+            if ($draw->join_num >= $draw->limit_user) {
+                $randItem = $this->mPWangzheDrawUserRepository->model()
+                    ::where('draw_id', $id)
+                    ->orderBy(DB::raw('RAND()'))
+                    ->take(1)
+                    ->get();
+                dd($randItem);
+            }
+
             return response()->json(
                 null,
                 Response::HTTP_OK
