@@ -39,6 +39,17 @@ class MPWangzheController extends Controller
     }
 
     /**
+     * 获取皮肤碎片详细日志
+     *
+     * @return mixed
+     */
+    public function getMySkinLogs()
+    {
+        return $this->mpWangzheService->getMySkinLogs();
+    }
+
+
+    /**
      * 主动动作的碎片更新（除了登录、注册等被动动作）
      *
      * @param $type

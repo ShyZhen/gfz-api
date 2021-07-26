@@ -177,6 +177,7 @@ Route::prefix('V1')->namespace('Api\V1')->middleware(['auth:api'])->group(functi
     #################################↓↓王者荣耀小程序↓↓###################################
     Route::prefix('mpwangzhe/')->group(function () {
         Route::get('skin', 'MPWangzheController@getMySkin');
+        Route::get('skinLogs', 'MPWangzheController@getMySkinLogs');
         Route::put('skin/{type}', 'MPWangzheController@updateOtherSetSkin');
         Route::post('join-draw/{id}', 'MPWangzheController@joinDraw');
     });

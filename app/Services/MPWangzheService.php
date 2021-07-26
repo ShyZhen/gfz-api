@@ -80,6 +80,20 @@ class MPWangzheService extends Service
     }
 
     /**
+     * 获取皮肤碎片详细日志
+     *
+     * @return mixed
+     */
+    public function getMySkinLogs()
+    {
+        $userId = Auth::id();
+        return $this->mPWangzheSkinLogRepository->model()
+            ::where('user_id', $userId)
+            ->orderByDesc('id')
+            ->paginate(env('PER_PAGE', 10));
+    }
+
+    /**
      * 获取我的皮肤碎片
      *
      * @return \Illuminate\Http\JsonResponse
