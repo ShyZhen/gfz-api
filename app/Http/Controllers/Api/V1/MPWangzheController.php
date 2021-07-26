@@ -96,4 +96,14 @@ class MPWangzheController extends Controller
         return $this->mpWangzheService->getDrawUserList($id);
     }
 
+    /**
+     * 我的中奖记录
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getMyDrawList()
+    {
+        return $this->mpWangzheService->getMyDrawList();
+    }
+
 }

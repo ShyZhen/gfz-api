@@ -248,6 +248,25 @@ class MPWangzheService extends Service
     }
 
     /**
+     * 我的中奖记录
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getMyDrawList()
+    {
+        $userId = Auth::id();
+        $data = $this->mPWangzheDrawRepository->model()
+            ::where('winner_id', $userId)
+            ->orderByDesc('created_at')
+            ->paginate(env('PER_PAGE', 10));
+
+        return response()->json(
+            ['data' => $data],
+            Response::HTTP_OK
+        );
+    }
+
+    /**
      * 参与抽奖活动
      *
      * @param $id
