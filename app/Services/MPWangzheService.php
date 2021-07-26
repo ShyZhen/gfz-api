@@ -11,6 +11,7 @@ namespace App\Services;
 
 use Carbon\Carbon;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Services\BaseService\RedisService;
 use App\Repositories\Eloquent\MPWangzheDrawRepository;
@@ -26,7 +27,7 @@ class MPWangzheService extends Service
         'login' => 2,
         'share' => 5,
         'ad' => 5,
-        'banner' => 5,
+        'banner' => 2,
     ];
 
     // 操作类型 1注册 2登录 3分享 4看广告 5点击banner 9兑换
@@ -47,6 +48,9 @@ class MPWangzheService extends Service
         '4' => 3,  // ad
         '5' => 3,  // banner
     ];
+
+    const TYPE_ON = 0;  // 活动进行中
+    const TYPE_OFF = 1; // 活动已结束
 
     private $redisService;
     private $mPWangzheDrawRepository;
@@ -239,7 +243,7 @@ class MPWangzheService extends Service
     {
         $userId = Auth::id();
         $draw = $this->mPWangzheDrawRepository->find($id);
-        if ($draw && $draw->join_num < $draw->limit_user) {
+        if ($draw && $draw->type == self::TYPE_ON) {
 
             // 是否参与过
             $item = $this->mPWangzheDrawUserRepository->model()
@@ -258,20 +262,13 @@ class MPWangzheService extends Service
 
             $res = $this->mPWangzheDrawUserRepository->create([
                 'user_id' => $userId,
-                'draw_id' => $id,
+                'draw_id' => $draw->id,
             ]);
             $draw->join_num += 1;
             $res && $draw->save();
 
-            // TODO 人满自动开奖
-            if ($draw->join_num >= $draw->limit_user) {
-                $randItem = $this->mPWangzheDrawUserRepository->model()
-                    ::where('draw_id', $id)
-                    ->orderBy(DB::raw('RAND()'))
-                    ->take(1)
-                    ->get();
-                dd($randItem);
-            }
+            // 人满自动开奖 更改活动结束状态
+            $this->handleDrawEnd($draw);
 
             return response()->json(
                 null,
@@ -297,6 +294,27 @@ class MPWangzheService extends Service
             ::where('draw_id', $id)
             ->orderByDesc('created_at')
             ->paginate(env('PER_PAGE', 10));
+    }
+
+    /**
+     * 人满自动开奖 并更改活动结束状态
+     *
+     * @param $draw
+     */
+    private function handleDrawEnd($draw)
+    {
+        if ($draw->join_num >= $draw->limit_user) {
+            $randItem = $this->mPWangzheDrawUserRepository->model()
+                ::where('draw_id', $draw->id)
+                ->orderBy(DB::raw('RAND()'))
+                ->take(1)
+                ->pluck('user_id');
+
+            $winnerId = $randItem[0];
+            $draw->winner_id = $winnerId;
+            $draw->type = self::TYPE_OFF;
+            $draw->save();
+        }
     }
 
 }
