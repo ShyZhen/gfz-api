@@ -179,6 +179,7 @@ Route::prefix('V1')->namespace('Api\V1')->middleware(['auth:api'])->group(functi
         Route::get('skin', 'MPWangzheController@getMySkin');
         Route::get('skin-logs', 'MPWangzheController@getMySkinLogs');
         Route::put('skin/{type}', 'MPWangzheController@updateOtherSetSkin');
+        Route::post('give-skin', 'MPWangzheController@giveSbSkin');
         Route::post('join-draw/{id}', 'MPWangzheController@joinDraw');
         Route::get('my-draw', 'MPWangzheController@getMyDrawList');  // 我参与并中奖的活动
     });

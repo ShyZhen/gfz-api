@@ -36,6 +36,8 @@ class MPWZSkinLogController extends AdminController
                 3 => '分享',
                 4 => '看视频ad',
                 5 => '点击banner',
+                6 => '赠送',
+                7 => '获赠',
                 9 => '兑换',
             ]);
         $table->column('created_at', __('Created at'));

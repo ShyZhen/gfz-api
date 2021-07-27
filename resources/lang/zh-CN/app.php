@@ -62,5 +62,7 @@ return [
     'has_sensitive_words' => '包含敏感内容',
     'has_already_join' => '您已经参与过啦',
     'draw_end' => '活动太火爆已经结束啦',
+    'skin_not_enough' => '剩余碎片不够',
+    'can_not_give_self' => '无法赠送给自己',
 
 ];

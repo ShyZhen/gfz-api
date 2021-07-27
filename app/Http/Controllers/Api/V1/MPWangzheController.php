@@ -11,8 +11,11 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Services\MPWangzheService;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
 class MPWangzheController extends Controller
 {
@@ -104,6 +107,26 @@ class MPWangzheController extends Controller
     public function getMyDrawList()
     {
         return $this->mpWangzheService->getMyDrawList();
+    }
+
+    public function giveSbSkin(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|numeric',
+            'skin_num' => 'required|numeric',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(
+                ['message' => $validator->errors()->first()],
+                Response::HTTP_BAD_REQUEST
+            );
+        } else {
+            return $this->mpWangzheService->giveSkin(
+                $request->get('user_id'),
+                $request->get('skin_num')
+            );
+        }
     }
 
 }

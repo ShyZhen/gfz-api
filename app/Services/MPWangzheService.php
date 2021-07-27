@@ -37,6 +37,8 @@ class MPWangzheService extends Service
         'share' => 3,
         'ad' => 4,
         'banner' => 5,
+        'give' => 6,
+        'get' => 7,
         'used' => 9,
     ];
 
@@ -46,7 +48,7 @@ class MPWangzheService extends Service
         '2' => 1,  // login
         '3' => 3,  // share
         '4' => 3,  // ad
-        '5' => 3,  // banner
+        '5' => 2,  // banner
     ];
 
     const TYPE_ON = 0;  // 活动进行中
@@ -348,6 +350,46 @@ class MPWangzheService extends Service
             $draw->type = self::TYPE_OFF;
             $draw->save();
         }
+    }
+
+    public function giveSkin($userId, $skinNum)
+    {
+        // 当前用户先减skinNum，成功后再加给对方90%（有这个人的话）
+        // 不开事务，记碎片日志，没成功的话根据日志找回
+        $myId = Auth::id();
+        $mySkin = $this->mPWangzheSkinRepository->findBy('user_id', $myId);
+
+        if ($myId == $userId) {
+            return response()->json(
+                ['message' => __('app.can_not_give_self')],
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+        }
+
+        // 不够
+        if ($skinNum > $mySkin->skin_patch) {
+            return response()->json(
+                ['message' => __('app.skin_not_enough')],
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+        }
+
+        // 扣减自己的，并写日志
+        $mySkin->skin_patch -= $skinNum;
+        $mySkin->save() && $this->writeSkinLog($myId, $skinNum, self::TYPE['give']);
+
+        // 加给对方，并写日志
+        $otherSkin = $this->mPWangzheSkinRepository->findBy('user_id', $userId);
+        if ($otherSkin) {
+            $tempSkin = $skinNum * 0.9;
+            $otherSkin->skin_patch += $tempSkin;
+            $otherSkin->save() && $this->writeSkinLog($userId, $tempSkin, self::TYPE['get']);
+        }
+
+        return response()->json(
+            ['data' => $mySkin->skin_patch],
+            Response::HTTP_OK
+        );
     }
 
 }
