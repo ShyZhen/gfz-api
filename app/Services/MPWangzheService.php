@@ -89,10 +89,15 @@ class MPWangzheService extends Service
     public function getMySkinLogs()
     {
         $userId = Auth::id();
-        return $this->mPWangzheSkinLogRepository->model()
+        $data = $this->mPWangzheSkinLogRepository->model()
             ::where('user_id', $userId)
             ->orderByDesc('id')
             ->paginate(env('PER_PAGE', 10));
+
+        return response()->json(
+            ['data' => $data],
+            Response::HTTP_OK
+        );
     }
 
     /**
