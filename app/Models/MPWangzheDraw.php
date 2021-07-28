@@ -13,4 +13,8 @@ class MPWangzheDraw extends Model
         'limit_user', 'title', 'image', 'winner_id', 'type'
     ];
 
+    protected function serializeDate(\DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
 }

@@ -13,4 +13,8 @@ class MPWangzheSkin extends Model
         'user_id', 'skin_patch',
     ];
 
+    protected function serializeDate(\DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
 }

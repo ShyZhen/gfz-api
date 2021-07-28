@@ -13,4 +13,8 @@ class MPWangzheSkinLog extends Model
         'user_id', 'num', 'type',
     ];
 
+    protected function serializeDate(\DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
 }
