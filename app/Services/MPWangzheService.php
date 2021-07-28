@@ -30,7 +30,7 @@ class MPWangzheService extends Service
         'banner' => 2,
     ];
 
-    // 操作类型 1注册 2登录 3分享 4看广告 5点击banner 9兑换
+    // 操作类型 1注册 2登录 3分享 4看广告 5点击banner 6赠送 7获赠 9兑换
     const TYPE = [
         'register' => 1,
         'login' => 2,
@@ -302,7 +302,7 @@ class MPWangzheService extends Service
             $draw->join_num += 1;
             $res && $draw->save();
 
-            // 人满自动开奖 更改活动结束状态
+            // 人满自动开奖 更改活动结束状态 不加事务,可以多于limit_user数量
             $this->handleDrawEnd($draw);
 
             return response()->json(
@@ -352,6 +352,13 @@ class MPWangzheService extends Service
         }
     }
 
+    /**
+     * 赠送碎片
+     *
+     * @param $userId
+     * @param $skinNum
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function giveSkin($userId, $skinNum)
     {
         // 当前用户先减skinNum，成功后再加给对方90%（有这个人的话）
@@ -375,12 +382,13 @@ class MPWangzheService extends Service
         }
 
         // 扣减自己的，并写日志
+        $flag = false;
         $mySkin->skin_patch -= $skinNum;
-        $mySkin->save() && $this->writeSkinLog($myId, $skinNum, self::TYPE['give']);
+        $mySkin->save() && $this->writeSkinLog($myId, $skinNum, self::TYPE['give']) && $flag = true;
 
         // 加给对方，并写日志
         $otherSkin = $this->mPWangzheSkinRepository->findBy('user_id', $userId);
-        if ($otherSkin) {
+        if ($flag && $otherSkin) {
             $tempSkin = $skinNum * 0.9;
             $otherSkin->skin_patch += $tempSkin;
             $otherSkin->save() && $this->writeSkinLog($userId, $tempSkin, self::TYPE['get']);

@@ -109,6 +109,12 @@ class MPWangzheController extends Controller
         return $this->mpWangzheService->getMyDrawList();
     }
 
+    /**
+     * 赠送某人碎片
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function giveSbSkin(Request $request)
     {
         $validator = Validator::make($request->all(), [
