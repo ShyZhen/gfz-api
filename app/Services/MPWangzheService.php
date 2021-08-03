@@ -330,10 +330,15 @@ class MPWangzheService extends Service
      */
     public function getDrawUserList($id)
     {
-        return $this->mPWangzheDrawUserRepository->model()
+        $data = $this->mPWangzheDrawUserRepository->model()
             ::where('draw_id', $id)
             ->orderByDesc('created_at')
             ->paginate(env('PER_PAGE', 10));
+
+        return response()->json(
+            ['data' => $data],
+            Response::HTTP_OK
+        );
     }
 
     /**
