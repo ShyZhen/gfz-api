@@ -333,7 +333,7 @@ class MPWangzheService extends Service
         $data = $this->mPWangzheDrawUserRepository->model()
             ::where('draw_id', $id)
             ->orderByDesc('created_at')
-            ->paginate(env('PER_PAGE', 10));
+            ->paginate(20);
 
         return response()->json(
             ['data' => $data],
