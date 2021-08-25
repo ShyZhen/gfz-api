@@ -264,6 +264,7 @@ class MPWangzheService extends Service
         $userId = Auth::id();
         $data = $this->mPWangzheDrawRepository->model()
             ::where('winner_id', $userId)
+            ->where('type', 1)
             ->orderByDesc('created_at')
             ->paginate(env('PER_PAGE', 10));
 
