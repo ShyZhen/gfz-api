@@ -25,9 +25,9 @@ class MPWangzheService extends Service
     const SKIN = [
         'register' => 20,
         'login' => 2,
-        'share' => 5,
-        'ad' => 5,
+        'share' => 2,
         'banner' => 2,
+        'ad' => 3,
     ];
 
     // 操作类型 1注册 2登录 3分享 4看广告 5点击banner 6赠送 7获赠 9兑换
@@ -46,7 +46,7 @@ class MPWangzheService extends Service
     const LIMIT = [
         '1' => 1,  // register
         '2' => 1,  // login
-        '3' => 3,  // share
+        '3' => 2,  // share
         '4' => 3,  // ad
         '5' => 2,  // banner
     ];
