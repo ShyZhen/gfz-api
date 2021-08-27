@@ -63,6 +63,7 @@ return [
     'has_already_join' => 'Has Already Joined',
     'draw_end' => 'Draw End',
     'skin_not_enough' => 'Skin Not Enough',
+    'base_skin_not_enough' => 'Skin Not Enough',
     'can_not_give_self' => 'Can\'t Give Myself',
     'no_this_user' => 'This User ID Does Not Exist',
 

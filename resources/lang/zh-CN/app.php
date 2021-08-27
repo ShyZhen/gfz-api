@@ -63,6 +63,7 @@ return [
     'has_already_join' => '您已经参与过啦',
     'draw_end' => '活动太火爆已经结束啦',
     'skin_not_enough' => '剩余碎片不够',
+    'base_skin_not_enough' => '不满足最小兑换量',
     'can_not_give_self' => '无法赠送给自己',
     'no_this_user' => '赠送对象不存在',
 

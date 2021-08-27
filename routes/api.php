@@ -182,6 +182,8 @@ Route::prefix('V1')->namespace('Api\V1')->middleware(['auth:api'])->group(functi
         Route::post('give-skin', 'MPWangzheController@giveSbSkin');
         Route::post('join-draw/{id}', 'MPWangzheController@joinDraw');
         Route::get('my-draw', 'MPWangzheController@getMyDrawList');  // 我参与并中奖的活动
+        Route::post('convert', 'MPWangzheController@convert');  // 提交申请兑换碎片
+        Route::get('convert', 'MPWangzheController@convertList');  // 历史碎片兑换记录
     });
     ################################↑↑王者荣耀小程序↑↑###################################
 });

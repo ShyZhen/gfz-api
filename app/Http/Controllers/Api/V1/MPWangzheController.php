@@ -135,4 +135,24 @@ class MPWangzheController extends Controller
         }
     }
 
+    /**
+     * 兑换碎片申请动作
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function convert()
+    {
+        return $this->mpWangzheService->convert();
+    }
+
+    /**
+     * 碎片兑换历史列表
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function convertList()
+    {
+        return $this->mpWangzheService->convertList();
+    }
+
 }

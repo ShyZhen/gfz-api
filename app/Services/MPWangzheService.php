@@ -18,6 +18,7 @@ use App\Repositories\Eloquent\MPWangzheDrawRepository;
 use App\Repositories\Eloquent\MPWangzheSkinRepository;
 use App\Repositories\Eloquent\MPWangzheSkinLogRepository;
 use App\Repositories\Eloquent\MPWangzheDrawUserRepository;
+use App\Repositories\Eloquent\MPWangzheSkinConvertRepository;
 
 class MPWangzheService extends Service
 {
@@ -46,7 +47,7 @@ class MPWangzheService extends Service
     const LIMIT = [
         '1' => 1,  // register
         '2' => 1,  // login
-        '3' => 2,  // share
+        '3' => 3,  // share
         '4' => 3,  // ad
         '5' => 2,  // banner
     ];
@@ -59,6 +60,7 @@ class MPWangzheService extends Service
     private $mPWangzheSkinRepository;
     private $mPWangzheSkinLogRepository;
     private $mPWangzheDrawUserRepository;
+    private $mPWangzheSkinConvertRepository;
 
     /**
      * @param RedisService $redisService
@@ -66,19 +68,22 @@ class MPWangzheService extends Service
      * @param MPWangzheSkinRepository $mPWangzheSkinRepository
      * @param MPWangzheSkinLogRepository $mPWangzheSkinLogRepository
      * @param MPWangzheDrawUserRepository $mPWangzheDrawUserRepository
+     * @param MPWangzheSkinConvertRepository $mPWangzheSkinConvertRepository
      */
     public function __construct(
         RedisService $redisService,
         MPWangzheDrawRepository $mPWangzheDrawRepository,
         MPWangzheSkinRepository $mPWangzheSkinRepository,
         MPWangzheSkinLogRepository $mPWangzheSkinLogRepository,
-        MPWangzheDrawUserRepository $mPWangzheDrawUserRepository
+        MPWangzheDrawUserRepository $mPWangzheDrawUserRepository,
+        MPWangzheSkinConvertRepository $mPWangzheSkinConvertRepository
     ) {
         $this->redisService = $redisService;
         $this->mPWangzheDrawRepository = $mPWangzheDrawRepository;
         $this->mPWangzheSkinRepository = $mPWangzheSkinRepository;
         $this->mPWangzheSkinLogRepository = $mPWangzheSkinLogRepository;
         $this->mPWangzheDrawUserRepository = $mPWangzheDrawUserRepository;
+        $this->mPWangzheSkinConvertRepository = $mPWangzheSkinConvertRepository;
     }
 
     /**
@@ -407,6 +412,81 @@ class MPWangzheService extends Service
 
         return response()->json(
             ['data' => $mySkin->skin_patch],
+            Response::HTTP_OK
+        );
+    }
+
+    /**
+     * 兑换碎片申请动作
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function convert()
+    {
+        // 500碎片 = 50点券 = ￥5
+        $base = 500;
+        $myId = Auth::id();
+        $mySkin = $this->mPWangzheSkinRepository->findBy('user_id', $myId);
+
+        // 基数不够
+        if ($mySkin->skin_patch < $base) {
+            return response()->json(
+                ['message' => __('app.base_skin_not_enough')],
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+        }
+
+        // 写入兑换记录
+        // 先减用户碎片 防止对方提交申请后赠送给别人
+        $uuid = Auth::user()->uuid;
+        $convertSkin = floor($mySkin->skin_patch / 100) * 100;
+
+        // 扣减成功后 写入兑换记录表
+        // 人工兑换成功后更改状态、写入日志
+        DB::beginTransaction();
+        try {
+            $mySkin->skin_patch -= $convertSkin;
+            $mySkin->save();
+
+            $this->mPWangzheSkinConvertRepository->create([
+                'user_id' => $myId,
+                'user_uuid' => $uuid,
+                'convert_num' => $convertSkin,
+            ]);
+
+            DB::commit();
+
+            return response()->json(
+                ['data' => $mySkin->skin_patch],
+                Response::HTTP_OK
+            );
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json(
+                ['message' => __('app.try_again')],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+    }
+
+    /**
+     * 碎片兑换历史列表
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function convertList()
+    {
+        $userId = Auth::id();
+        $data = $this->mPWangzheSkinConvertRepository->model()
+            ::select(['id', 'user_id', 'convert_num', 'status', 'created_at'])
+            ->where('user_id', $userId)
+            ->orderByDesc('created_at')
+            ->paginate(env('PER_PAGE', 10));
+
+        return response()->json(
+            ['data' => $data],
             Response::HTTP_OK
         );
     }
