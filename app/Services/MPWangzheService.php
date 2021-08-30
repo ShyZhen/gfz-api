@@ -24,7 +24,7 @@ class MPWangzheService extends Service
 {
     // 获取皮肤碎片的数量
     const SKIN = [
-        'register' => 20,
+        'register' => 30,
         'login' => 2,
         'share' => 2,
         'banner' => 2,
@@ -483,7 +483,7 @@ class MPWangzheService extends Service
             ::select(['id', 'user_id', 'convert_num', 'status', 'created_at'])
             ->where('user_id', $userId)
             ->orderByDesc('created_at')
-            ->paginate(env('PER_PAGE', 10));
+            ->paginate(20);
 
         return response()->json(
             ['data' => $data],
