@@ -76,6 +76,11 @@ class MPWZDrawController extends AdminController
         $form->number('limit_user', __('Limit user'))->default(1000);
         $form->text('title', __('Title'));
         $form->text('image', __('Image'));
+        $form->number('winner_id', __('Winner id'));
+        $form->select('type', __('Type'))->options([
+            0 => '进行中',
+            1 => '已结束',
+        ]);
 
         return $form;
     }
