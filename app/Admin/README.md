@@ -1,3 +1,7 @@
+### 初始化登录账号
+ u: admin
+ p: admin
+
 ### 创建控制器
 // Mac os、 Linux
 php artisan admin:make UserController --model=App\\User
