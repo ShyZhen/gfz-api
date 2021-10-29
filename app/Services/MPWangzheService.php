@@ -362,7 +362,11 @@ class MPWangzheService extends Service
                 ->pluck('user_id');
 
             $winnerId = $randItem[0];
-            $draw->winner_id = $winnerId;
+
+            if ($draw->winner_id == 0) {
+                $draw->winner_id = $winnerId;
+            }
+
             $draw->type = self::TYPE_OFF;
             $draw->save();
         }
