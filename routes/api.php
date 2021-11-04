@@ -30,6 +30,7 @@ Route::prefix('V1')->namespace('Api\V1')->group(function () {
     Route::get('oauth/github/login', 'OAuthController@githubLogin');
     Route::get('oauth/github/callback', 'OAuthController@githubCallback');
     Route::post('oauth/wechat/login', 'OAuthController@wechatLogin');
+    Route::post('oauth/qq/login', 'OAuthController@qqLogin');
 
     // 首页文章列表
     Route::get('posts', 'PostController@getAllPosts');

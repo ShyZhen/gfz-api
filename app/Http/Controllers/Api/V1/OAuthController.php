@@ -12,6 +12,7 @@ namespace App\Http\Controllers\Api\V1;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
+use App\Services\OAuthService\QQService;
 use Illuminate\Support\Facades\Validator;
 use App\Services\OAuthService\GithubService;
 use App\Services\OAuthService\WechatService;
@@ -90,6 +91,38 @@ class OAuthController extends Controller
             );
         } else {
             $response = WechatService::wechatLogin(
+                $request->get('code'),
+                $request->get('user')
+            );
+        }
+
+        return $response;
+    }
+
+    /**
+     * QQ小程序登录
+     *
+     * @Author huaixiu.zhen
+     * http://litblc.com
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse|string
+     */
+    public function qqLogin(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'code' => 'required',
+            'user' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $response = response()->json(
+                ['message' => $validator->errors()->first()],
+                Response::HTTP_BAD_REQUEST
+            );
+        } else {
+            $response = QQService::qqLogin(
                 $request->get('code'),
                 $request->get('user')
             );

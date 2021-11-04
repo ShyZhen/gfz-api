@@ -44,6 +44,7 @@ class CreateUsersTable extends Migration
             $table->string('github', 64)->default('');
             $table->string('github_id', 32)->default('');
             $table->string('wechat_openid', 32)->default('');
+            $table->string('qq_openid', 32)->default('');
             $table->timestamps();
         });
     }

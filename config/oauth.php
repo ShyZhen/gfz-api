@@ -16,4 +16,9 @@ return [
         'app_secret' => env('WechatAppSecret', ''),
         'base_url' => 'https://api.weixin.qq.com/sns/jscode2session',
     ],
+    'qq' => [
+        'app_id' => env('QQAppID', ''),
+        'app_secret' => env('QQAppSecret', ''),
+        'base_url' => 'https://api.q.qq.com/sns/jscode2session',
+    ],
 ];
