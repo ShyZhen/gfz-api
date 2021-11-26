@@ -4,10 +4,10 @@
 
 ### 创建控制器
 // Mac os、 Linux
-php artisan admin:make UserController --model=App\\User
+php artisan admin:make UserController --model=App\\Models\\User
 
 // Windows
-php artisan admin:make UserController --model=App\User
+php artisan admin:make UserController --model=App\Models\User
 
 ### 创建路由
 $router->resource('users', UserController::class);

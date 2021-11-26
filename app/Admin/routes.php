@@ -27,5 +27,6 @@ Route::group([
     $router->resource('m-p-wangzhe-skins', MPWZSkinController::class);
     $router->resource('m-p-wangzhe-skin-logs', MPWZSkinLogController::class);
     $router->resource('m-p-wangzhe-skin-converts', MPWZSkinConvertController::class);
+    $router->resource('m-p-wangzhe-platforms', MPWZPlatformController::class);
 
 });

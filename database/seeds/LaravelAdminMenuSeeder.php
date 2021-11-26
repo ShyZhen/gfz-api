@@ -25,6 +25,7 @@ class LaravelAdminMenuSeeder extends Seeder
             ['id' => 13, 'parent_id' => 11, 'order' => '2', 'title' => '用户碎片列表', 'icon' => 'fab fa-microsoft', 'uri' => 'm-p-wangzhe-skins'],
             ['id' => 14, 'parent_id' => 11, 'order' => '3', 'title' => '碎片领取日志', 'icon' => 'fas fa-file-alt', 'uri' => 'm-p-wangzhe-skin-logs'],
             ['id' => 15, 'parent_id' => 11, 'order' => '4', 'title' => '碎片兑换日志', 'icon' => 'fas fa-chess-queen', 'uri' => 'm-p-wangzhe-skin-converts'],
+            ['id' => 16, 'parent_id' => 11, 'order' => '5', 'title' => '平台配置', 'icon' => 'fas fa-cloud', 'uri' => 'm-p-wangzhe-platforms'],
         ];
 
         \Illuminate\Support\Facades\DB::table('laravel_admin_menu')->insert($seeder);
