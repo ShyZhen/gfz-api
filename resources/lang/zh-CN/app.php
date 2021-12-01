@@ -66,5 +66,7 @@ return [
     'base_skin_not_enough' => '不满足最小兑换量',
     'can_not_give_self' => '无法赠送给自己',
     'no_this_user' => '赠送对象不存在',
+    'upload_file_temp_fail' => '文件上传临时目录失败',
+    'cover_image_fail' => '风格转换失败，图片需包含人脸',
 
 ];

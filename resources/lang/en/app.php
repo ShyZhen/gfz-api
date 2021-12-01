@@ -66,5 +66,7 @@ return [
     'base_skin_not_enough' => 'Skin Not Enough',
     'can_not_give_self' => 'Can\'t Give Myself',
     'no_this_user' => 'This User ID Does Not Exist',
+    'upload_file_temp_fail' => 'Upload File To Temp Fail',
+    'cover_image_fail' => 'Cover Image Fail',
 
 ];

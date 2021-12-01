@@ -76,7 +76,14 @@ Route::prefix('V1')->namespace('Api\V1')->group(function () {
         Route::get('draw-user/{drawId}', 'MPWangzheController@getDrawUserList');
     });
     ################################↑↑王者荣耀小程序↑↑###################################
+
+    // 人脸动漫风格-阿里云视觉智能开放平台
+    Route::prefix('alibaba')->group(function () {
+       Route::post('face/{type}', 'FileController@anime');
+    });
 });
+
+
 
 // need access_token
 Route::prefix('V1')->namespace('Api\V1')->middleware(['auth:api'])->group(function () {

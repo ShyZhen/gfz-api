@@ -17,6 +17,8 @@ use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use App\Services\SecurityCheckService;
 use Illuminate\Support\Facades\Validator;
+use App\Services\BaseService\AlibabaService;
+
 
 class FileController extends Controller
 {
@@ -230,6 +232,50 @@ class FileController extends Controller
                 ['message' => __('app.try_again')],
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );
+        }
+    }
+
+    /**
+     * 图像 动漫风格转换 阿里云视觉只能开放平台
+     *
+     * @param Request $request
+     * @param $type
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \AlibabaCloud\Client\Exception\ClientException
+     */
+    public function anime(Request $request, $type)
+    {
+        // 日漫风 3D特效 手绘风 铅笔画 艺术特效
+        $algoType = ['anime', '3d', 'handdrawn', 'sketch', 'artstyle'];
+        if (!in_array($type, $algoType)) {
+            return response()->json(
+                null,
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        $validator = Validator::make($request->all(), [
+            'image' => 'required|image|mimes:jpg,jpeg,png,gif|between:1,5000',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(
+                ['message' => $validator->errors()->first()],
+                Response::HTTP_BAD_REQUEST
+            );
+        } else {
+            $file = $request->file('image');
+
+            // 敏感图片验证
+            /*
+            if (!$this->securityCheckService->imgCheck($file)) {
+                return response()->json(
+                    ['message' => __('app.has_sensitive_words')],
+                    Response::HTTP_UNPROCESSABLE_ENTITY
+                );
+            }
+            */
+            return AlibabaService::handleImage($type, $file);
         }
     }
 }
