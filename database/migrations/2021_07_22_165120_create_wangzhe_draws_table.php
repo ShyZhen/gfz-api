@@ -16,6 +16,7 @@ class CreateWangzheDrawsTable extends Migration
     {
         Schema::create('wangzhe_draws', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedInteger('platform_id')->default(0)->index();  // 多平台改造，添加平台ID
             $table->unsignedInteger('limit_user')->default(1000);  // 多少人参与后开奖
             $table->unsignedInteger('join_num')->default(0);  // 当前已有多少人参与
             $table->string('title', 128)->default('');

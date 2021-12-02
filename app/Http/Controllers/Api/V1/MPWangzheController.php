@@ -69,12 +69,25 @@ class MPWangzheController extends Controller
     /**
      * 抽奖活动列表（已完成、进行中）
      *
+     * @param $request
      * @param $type
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getDrawList($type): \Illuminate\Http\JsonResponse
+    public function getDrawList(Request $request, $type): \Illuminate\Http\JsonResponse
     {
-        return $this->mpWangzheService->getDrawList($type);
+        $platformUuid = $request->get('platform_id');
+        if (!$platformUuid) {
+
+            // TODO 小程序上线后删除默认设置
+            $platformUuid = 'app-ef0573b6-0450-bbe1-0a4d-2cb5bebd43dd';
+
+//            return response()->json(
+//                ['message' => __('app.illegal_input')],
+//                Response::HTTP_BAD_REQUEST
+//            );
+
+        }
+        return $this->mpWangzheService->getDrawList($type, $platformUuid);
     }
 
     /**

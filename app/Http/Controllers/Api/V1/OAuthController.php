@@ -79,9 +79,11 @@ class OAuthController extends Controller
      */
     public function wechatLogin(Request $request)
     {
+        // TODO 上线后打开validator
         $validator = Validator::make($request->all(), [
             'code' => 'required',
             'user' => 'required',
+//            'platform_uuid' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -92,7 +94,8 @@ class OAuthController extends Controller
         } else {
             $response = WechatService::wechatLogin(
                 $request->get('code'),
-                $request->get('user')
+                $request->get('user'),
+                $request->get('platform_uuid')
             );
         }
 
@@ -100,7 +103,7 @@ class OAuthController extends Controller
     }
 
     /**
-     * QQ小程序登录
+     * QQ小程序登录 (多版本不再更新)
      *
      * @Author huaixiu.zhen
      * http://litblc.com

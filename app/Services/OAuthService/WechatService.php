@@ -14,6 +14,7 @@ use GuzzleHttp\Client;
 use App\Services\Service;
 use App\Services\FileService;
 use Illuminate\Http\Response;
+use App\Models\MPWangzhePlatform;
 
 class WechatService extends Service
 {
@@ -22,11 +23,22 @@ class WechatService extends Service
     /**
      * @Author huaixiu.zhen
      * http://litblc.com
+     *
+     * @param $platformUuid
      */
-    private static function initConfig()
+    private static function initConfig($platformUuid = '')
     {
         if (!self::$config) {
+            // TODO 上线后兼容代码删掉
             self::$config = config('oauth.wechat');
+
+            // 支持平台版本，更改appid、appsecret
+            $row = MPWangzhePlatform::where('uuid', $platformUuid)->first();
+            if ($row && $row->deleted == 'none') {
+                self::$config['app_id'] = $row->app_id;
+                self::$config['app_secret'] = $row->app_secret;
+                self::$config['base_url'] = 'https://api.weixin.qq.com/sns/jscode2session';
+            }
         }
     }
 
@@ -37,12 +49,13 @@ class WechatService extends Service
      * http://litblc.com
      *
      * @param $code
+     * @param $platformUuid
      *
      * @return bool|\Illuminate\Http\JsonResponse|mixed|string
      */
-    private static function getOpenIdByCode($code)
+    private static function getOpenIdByCode($code, $platformUuid)
     {
-        self::initConfig();
+        self::initConfig($platformUuid);
 
         if (!self::$config['app_id'] || !self::$config['app_secret']) {
             return response()->json(
@@ -64,6 +77,7 @@ class WechatService extends Service
         if (empty($result) || empty($result = json_decode($result, true))) {
             return false;
         }
+
         if (array_key_exists('errcode', $result)) {
             return false;
         }
@@ -79,12 +93,13 @@ class WechatService extends Service
      *
      * @param $code
      * @param $userInfo
+     * @param $platformUuid
      *
      * @return \Illuminate\Http\JsonResponse|string
      */
-    public static function wechatLogin($code, $userInfo)
+    public static function wechatLogin($code, $userInfo, $platformUuid)
     {
-        $openIdArr = self::getOpenIdByCode($code);
+        $openIdArr = self::getOpenIdByCode($code, $platformUuid);
 
         if (is_array($openIdArr) && array_key_exists('openid', $openIdArr)) {
             $binding = false;

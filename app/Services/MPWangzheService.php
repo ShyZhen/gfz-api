@@ -11,6 +11,7 @@ namespace App\Services;
 
 use Carbon\Carbon;
 use Illuminate\Http\Response;
+use App\Models\MPWangzhePlatform;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Services\BaseService\RedisService;
@@ -244,12 +245,21 @@ class MPWangzheService extends Service
      * 抽奖活动列表（已完成、进行中）
      *
      * @param $type
+     * @param $platformUuid
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getDrawList($type)
+    public function getDrawList($type, $platformUuid)
     {
+        // 判断改账号是否正常
+        $platformId = 0;
+        $row = MPWangzhePlatform::where('uuid', $platformUuid)->first();
+        if ($row && $row->deleted == 'none') {
+            $platformId = $row->id;
+        }
+
         $data = $this->mPWangzheDrawRepository->model()
-            ::where('type', $type)
+            ::where('platform_id', $platformId)
+            ->where('type', $type)
             ->orderByDesc('created_at')
             ->paginate(env('PER_PAGE', 10));
 

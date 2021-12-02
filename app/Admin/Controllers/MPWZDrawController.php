@@ -27,6 +27,7 @@ class MPWZDrawController extends AdminController
         $table = new Table(new MPWangzheDraw());
 
         $table->column('id', __('Id'))->sortable();;
+        $table->column('platform_id', __('Platform id'));
         $table->column('limit_user', __('Limit user'));
         $table->column('title', __('Title'));
         $table->column('image', __('Image'));
@@ -53,6 +54,7 @@ class MPWZDrawController extends AdminController
         $show = new Show(MPWangzheDraw::findOrFail($id));
 
         $show->field('id', __('Id'));
+        $show->field('platform_id', __('Platform id'));
         $show->field('limit_user', __('Limit user'));
         $show->field('title', __('Title'));
         $show->field('image', __('Image'));
@@ -73,6 +75,7 @@ class MPWZDrawController extends AdminController
     {
         $form = new Form(new MPWangzheDraw());
 
+        $form->number('platform_id', __('Patform id'))->default(0);
         $form->number('limit_user', __('Limit user'))->default(1000);
         $form->text('title', __('Title'));
         $form->text('image', __('Image'));
