@@ -104,4 +104,12 @@ return [
         'm3u8Fops' => env('M3u8Fops', 'avthumb/m3u8/noDomain/1/segtime/60/ab/128k/ar/44100/acodec/libfaac/r/30/vb/128k/stripmeta/1'),
     ],
 
+    'aliyun_oss' => [
+        'accessKey' => env('OssAccessKeyId', ''),
+        'secretKey' => env('OssAccessKeySecret', ''),
+        // 默认上海的
+        'endpoint' => env('OssEndpoint', 'oss-cn-shanghai.aliyuncs.com'),
+        'bucket' => env('OssBucket', 'zhx-shanghai'),
+    ],
+
 ];

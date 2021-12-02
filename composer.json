@@ -13,6 +13,7 @@
         "alibabacloud/facebody": "^1.8",
         "alibabacloud/sdk": "^1.8",
         "alibabacloud/viapi-utils": "^0.1.3",
+        "aliyuncs/oss-sdk-php": "^2.4",
         "duomai/cps-client": "^1.0",
         "elasticsearch/elasticsearch": "7.4.0",
         "encore/laravel-admin": "2.*",
