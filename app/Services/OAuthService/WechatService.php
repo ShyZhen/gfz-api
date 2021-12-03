@@ -29,8 +29,7 @@ class WechatService extends Service
     private static function initConfig($platformUuid = '')
     {
         if (!self::$config) {
-            // TODO 上线后兼容代码删掉
-            self::$config = config('oauth.wechat');
+            // self::$config = config('oauth.wechat');
 
             // 支持平台版本，更改appid、appsecret
             $row = MPWangzhePlatform::where('uuid', $platformUuid)->first();

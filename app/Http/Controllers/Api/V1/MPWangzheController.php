@@ -77,15 +77,10 @@ class MPWangzheController extends Controller
     {
         $platformUuid = $request->get('platform_id');
         if (!$platformUuid) {
-
-            // TODO 小程序上线后删除默认设置
-            $platformUuid = 'app-ef0573b6-0450-bbe1-0a4d-2cb5bebd43dd';
-
-//            return response()->json(
-//                ['message' => __('app.illegal_input')],
-//                Response::HTTP_BAD_REQUEST
-//            );
-
+            return response()->json(
+                ['message' => __('app.illegal_input')],
+                Response::HTTP_BAD_REQUEST
+            );
         }
         return $this->mpWangzheService->getDrawList($type, $platformUuid);
     }

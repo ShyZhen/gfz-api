@@ -79,11 +79,10 @@ class OAuthController extends Controller
      */
     public function wechatLogin(Request $request)
     {
-        // TODO 上线后打开validator
         $validator = Validator::make($request->all(), [
             'code' => 'required',
             'user' => 'required',
-//            'platform_uuid' => 'required',
+            'platform_uuid' => 'required',
         ]);
 
         if ($validator->fails()) {

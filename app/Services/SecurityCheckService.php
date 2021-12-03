@@ -1,5 +1,7 @@
 <?php
 /**
+ * 微信ugc安全验证
+ *
  * @Author huaixiu.zhen@gmail.com
  * http://litblc.com
  * User: huaixiu.zhen
