@@ -267,14 +267,14 @@ class FileController extends Controller
             $file = $request->file('image');
 
             // 敏感图片验证
-            /*
+
             if (!$this->securityCheckService->imgCheck($file)) {
                 return response()->json(
                     ['message' => __('app.has_sensitive_words')],
                     Response::HTTP_UNPROCESSABLE_ENTITY
                 );
             }
-            */
+
             return AlibabaService::handleImage($type, $file);
         }
     }
