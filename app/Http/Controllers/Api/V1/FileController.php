@@ -279,4 +279,38 @@ class FileController extends Controller
             return AlibabaService::handleImage($type, $file);
         }
     }
+
+    /**
+     * 安全检测
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function imageSecCheck(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'image' => 'required|image|mimes:jpg,jpeg,png,gif|between:1,5000',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(
+                ['message' => $validator->errors()->first()],
+                Response::HTTP_BAD_REQUEST
+            );
+        } else {
+            $file = $request->file('image');
+
+            if (!$this->securityCheckService->imgCheck($file)) {
+                return response()->json(
+                    ['message' => __('app.has_sensitive_words')],
+                    Response::HTTP_UNPROCESSABLE_ENTITY
+                );
+            }
+
+            return response()->json(
+                null,
+                Response::HTTP_NO_CONTENT
+            );
+        }
+    }
 }

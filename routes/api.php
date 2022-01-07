@@ -81,6 +81,7 @@ Route::prefix('V1')->namespace('Api\V1')->group(function () {
     Route::prefix('alibaba')->group(function () {
        Route::post('face/{type}', 'FileController@anime');
     });
+    Route::post('image/sec-check', 'FileController@imageSecCheck');
 });
 
 
