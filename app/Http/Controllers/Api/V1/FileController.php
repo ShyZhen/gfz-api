@@ -300,6 +300,21 @@ class FileController extends Controller
         } else {
             $file = $request->file('image');
 
+
+
+
+
+            // 年底时间禁用上传
+            return response()->json(
+                ['message' => __('app.has_sensitive_words')],
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+
+
+
+
+
+
             if (!$this->securityCheckService->imgCheck($file)) {
                 return response()->json(
                     ['message' => __('app.has_sensitive_words')],
