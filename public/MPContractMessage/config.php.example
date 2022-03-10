@@ -1,0 +1,13 @@
+<?php
+/**
+ * ${NAME}
+ *
+ * @author huaixiu.zhen
+ * @link https://www.litblc.com
+ * 2022/3/10 15:36
+ **/
+
+define('MP1TOKEN', 'xxxxx');
+define('MP1APPID', 'xxxxx');
+define('MP1APPSECRET', 'xxxxx');
+define('MP1IMAGEURL', '/MPContractMessage/mpwz-contract.jpg');  // 发送图片消息的图片，本地相对路径
