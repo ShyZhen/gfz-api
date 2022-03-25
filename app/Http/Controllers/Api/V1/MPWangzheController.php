@@ -163,4 +163,14 @@ class MPWangzheController extends Controller
         return $this->mpWangzheService->convertList();
     }
 
+    /**
+     * 查看英雄的推荐铭文、出装、小技巧
+     *
+     * @param $id
+     * @return mixed
+     */
+    public function getHeroTutorial($id)
+    {
+        return $this->mpWangzheService->getHeroTutorial($id);
+    }
 }

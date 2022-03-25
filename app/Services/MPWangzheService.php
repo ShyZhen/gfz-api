@@ -20,6 +20,7 @@ use App\Repositories\Eloquent\MPWangzheSkinRepository;
 use App\Repositories\Eloquent\MPWangzheSkinLogRepository;
 use App\Repositories\Eloquent\MPWangzheDrawUserRepository;
 use App\Repositories\Eloquent\MPWangzheSkinConvertRepository;
+use App\Repositories\Eloquent\MPWangzheHeroTutorialRepository;
 
 class MPWangzheService extends Service
 {
@@ -62,6 +63,7 @@ class MPWangzheService extends Service
     private $mPWangzheSkinLogRepository;
     private $mPWangzheDrawUserRepository;
     private $mPWangzheSkinConvertRepository;
+    private $mPWangzheHeroTutorialRepository;
 
     /**
      * @param RedisService $redisService
@@ -70,6 +72,7 @@ class MPWangzheService extends Service
      * @param MPWangzheSkinLogRepository $mPWangzheSkinLogRepository
      * @param MPWangzheDrawUserRepository $mPWangzheDrawUserRepository
      * @param MPWangzheSkinConvertRepository $mPWangzheSkinConvertRepository
+     * @param MPWangzheHeroTutorialRepository $mPWangzheHeroTutorialRepository
      */
     public function __construct(
         RedisService $redisService,
@@ -77,7 +80,8 @@ class MPWangzheService extends Service
         MPWangzheSkinRepository $mPWangzheSkinRepository,
         MPWangzheSkinLogRepository $mPWangzheSkinLogRepository,
         MPWangzheDrawUserRepository $mPWangzheDrawUserRepository,
-        MPWangzheSkinConvertRepository $mPWangzheSkinConvertRepository
+        MPWangzheSkinConvertRepository $mPWangzheSkinConvertRepository,
+        MPWangzheHeroTutorialRepository $mPWangzheHeroTutorialRepository
     ) {
         $this->redisService = $redisService;
         $this->mPWangzheDrawRepository = $mPWangzheDrawRepository;
@@ -85,6 +89,7 @@ class MPWangzheService extends Service
         $this->mPWangzheSkinLogRepository = $mPWangzheSkinLogRepository;
         $this->mPWangzheDrawUserRepository = $mPWangzheDrawUserRepository;
         $this->mPWangzheSkinConvertRepository = $mPWangzheSkinConvertRepository;
+        $this->mPWangzheHeroTutorialRepository = $mPWangzheHeroTutorialRepository;
     }
 
     /**
@@ -501,6 +506,16 @@ class MPWangzheService extends Service
 
         return response()->json(
             ['data' => $data],
+            Response::HTTP_OK
+        );
+    }
+
+    public function getHeroTutorial($id)
+    {
+        $row = $this->mPWangzheHeroTutorialRepository->findBy('hero_id', $id);
+
+        return response()->json(
+            ['data' => $row],
             Response::HTTP_OK
         );
     }

@@ -304,11 +304,11 @@ class FileController extends Controller
 
 
 
-            // 年底时间禁用上传
-            return response()->json(
-                ['message' => __('app.has_sensitive_words')],
-                Response::HTTP_UNPROCESSABLE_ENTITY
-            );
+            // 年底时间禁用上传,直接上传什么都返回失败
+//            return response()->json(
+//                ['message' => __('app.has_sensitive_words')],
+//                Response::HTTP_UNPROCESSABLE_ENTITY
+//            );
 
 
 

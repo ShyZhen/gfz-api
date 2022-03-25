@@ -74,6 +74,7 @@ Route::prefix('V1')->namespace('Api\V1')->group(function () {
     Route::prefix('mpwangzhe/')->group(function () {
         Route::get('draw/{type}', 'MPWangzheController@getDrawList');
         Route::get('draw-user/{drawId}', 'MPWangzheController@getDrawUserList');
+        Route::get('getHeroTutorial/{heroId}', 'MPWangzheController@getHeroTutorial');
     });
     ################################↑↑王者荣耀小程序↑↑###################################
 
