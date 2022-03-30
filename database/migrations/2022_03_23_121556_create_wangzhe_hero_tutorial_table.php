@@ -20,7 +20,7 @@ class CreateWangzheHeroTutorialTable extends Migration
             $table->string('ming_tips', 255); // 铭文小技巧
             $table->string('equipment', 765); // 出装推荐，json格式 {id:xx,name:xx,intro:xx}
             $table->string('equipment_tips', 255);  // 出装小技巧
-            $table->string('counter_hero', 255);  // 压制英雄，json格式 {id:xx,name:xx,intro:xx}
+            $table->string('counter_hero', 765);  // 压制英雄，json格式 {id:xx,name:xx,intro:xx}
             $table->timestamps();
         });
     }
