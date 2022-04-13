@@ -78,11 +78,16 @@ Route::prefix('V1')->namespace('Api\V1')->group(function () {
     });
     ################################↑↑王者荣耀小程序↑↑###################################
 
+    #################################↓↓头像挂件工坊↓↓###################################
     // 人脸动漫风格-阿里云视觉智能开放平台
     Route::prefix('alibaba')->group(function () {
        Route::post('face/{type}', 'FileController@anime');
     });
     Route::post('image/sec-check', 'FileController@imageSecCheck');
+    Route::prefix('mptyt/')->group(function () {
+        Route::get('red-package', 'MPTianyitianController@getRedList');
+    });
+    #################################↑↑头像挂件工坊↑↑###################################
 });
 
 
