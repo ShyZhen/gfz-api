@@ -460,8 +460,8 @@ class MPWangzheService extends Service
         $uuid = Auth::user()->uuid;
         $convertSkin = floor($mySkin->skin_patch / 100) * 100;
 
-        // 扣减成功后 写入兑换记录表
-        // 人工兑换成功后更改状态、写入日志
+        // 扣减成功后 写入兑换记录表 写入日志
+        // 人工兑换成功后更改记录表状态
         DB::beginTransaction();
         try {
             $mySkin->skin_patch -= $convertSkin;
