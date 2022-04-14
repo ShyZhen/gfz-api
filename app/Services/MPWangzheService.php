@@ -465,7 +465,7 @@ class MPWangzheService extends Service
         DB::beginTransaction();
         try {
             $mySkin->skin_patch -= $convertSkin;
-            $mySkin->save();
+            $mySkin->save() && $this->writeSkinLog($myId, $convertSkin, self::TYPE['used']);
 
             $this->mPWangzheSkinConvertRepository->create([
                 'user_id' => $myId,
