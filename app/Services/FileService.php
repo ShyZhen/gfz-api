@@ -316,6 +316,53 @@ class FileService extends Service
     }
 
     /**
+     * 上传图片到七牛服务(不需要登录、不记录日志)
+     * 直接返回url，跟内容一并保存
+     *
+     * @Author huaixiu.zhen
+     * http://litblc.com
+     *
+     * @param $file
+     * @param $savePath
+     * @param string $prefix
+     *
+     * @throws \Exception
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function uploadImgToQiniuWangZhe($file, $savePath, $prefix = '')
+    {
+        if ($file->isValid()) {
+
+            $imageName = self::uuid($prefix) . '.' . $file->extension();
+            $fullName = $savePath . '/' . $imageName;
+            $result = $this->qiniuService->uploadFile($file->path(), $fullName);
+
+            if ($result['code'] === 0) {
+                $imageUrl = config('filesystems.qiniu.cdnUrl') . '/' . $fullName;
+
+                // 记录用户上传的文件,便于后台管理
+                // $this->uploadLog($userId, $imageUrl);
+
+                return response()->json(
+                    ['data' => $imageUrl],
+                    Response::HTTP_CREATED
+                );
+            }
+
+            return response()->json(
+                ['message' => __('app.upload_file_qiniu_fail')],
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+        } else {
+            return response()->json(
+                ['message' => __('app.upload_file_valida_fail')],
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+        }
+    }
+
+    /**
      * 上传头像 存入七牛服务
      *
      * @Author huaixiu.zhen

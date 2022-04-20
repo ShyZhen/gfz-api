@@ -12,21 +12,27 @@
 namespace App\Http\Controllers\Api\V1;
 
 use Illuminate\Http\Request;
+use App\Services\FileService;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use App\Services\MPWangzheAdminService;
+use Illuminate\Support\Facades\Validator;
 
 class MPWangzheAdminController extends Controller
 {
+    private $fileService;
+
     private $mpWangzheAdminService;
 
     /**
      * FileController constructor.
      *
-     * @param $mpWangzheAdminService $mpWangzheAdminService
+     * @param MPWangzheAdminService $mpWangzheAdminService
+     * @param FileService $fileService
      */
-    public function __construct(MPWangzheAdminService  $mpWangzheAdminService)
+    public function __construct(MPWangzheAdminService  $mpWangzheAdminService, FileService $fileService)
     {
+        $this->fileService = $fileService;
         $this->mpWangzheAdminService = $mpWangzheAdminService;
     }
 
@@ -131,6 +137,47 @@ class MPWangzheAdminController extends Controller
             }
 
             return $this->mpWangzheAdminService->addDraw($platformId, $params);
+        } else {
+            return $check;
+        }
+    }
+
+    /**
+     * 添加抽奖数据时上传
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|string
+     * @throws \Exception
+     */
+    public function uploadDrawImage(Request $request)
+    {
+        $check = $this->loginPlatform($request);
+        if ($check->status() == Response::HTTP_OK) {
+            $platformId = $check->getData()->data;
+
+            $validator = Validator::make($request->all(), [
+                'image' => 'required|image|mimes:jpg,jpeg,png|between:1,300|dimensions:width=1080,height=496',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(
+                    ['message' => $validator->errors()->first()],
+                    Response::HTTP_BAD_REQUEST
+                );
+            } else {
+                $file = $request->file('image');
+
+                if (env('QiniuService')) {
+
+                    // 上传图片到七牛
+                    $res = $this->fileService->uploadImgToQiniuWangZhe($file, 'MPWangzhe/draw/'.$platformId, 'draw-');
+                } else {
+                    // 上传图片到本地
+                    $res = '';
+                }
+
+                return $res;
+            }
         } else {
             return $check;
         }

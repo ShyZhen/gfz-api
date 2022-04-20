@@ -94,6 +94,7 @@ Route::prefix('V1')->namespace('Api\V1')->group(function () {
         Route::post('login', 'MPWangzheAdminController@loginPlatform');
         Route::post('draw/{type}', 'MPWangzheAdminController@getDrawList');
         Route::post('edit-draw/{drawId}', 'MPWangzheAdminController@editDraw');
+        Route::post('image', 'MPWangzheAdminController@uploadDrawImage');
         Route::post('add-draw', 'MPWangzheAdminController@addDraw');
         Route::post('skin/{userUuid}', 'MPWangzheAdminController@getSkinDeteil');
         Route::post('skin-status/{id}/{userUuid}', 'MPWangzheAdminController@setSkinStatus');
