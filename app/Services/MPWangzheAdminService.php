@@ -63,8 +63,8 @@ class MPWangzheAdminService extends Service
      */
     public function getDrawList($type, $platformId)
     {
-        $data = $this->mPWangzheDrawRepository->model()
-            ::where('platform_id', $platformId)
+        $data = $this->mPWangzheDrawRepository->model()::with('user')
+            ->where('platform_id', $platformId)
             ->where('type', $type)
             ->orderByDesc('created_at')
             ->paginate(env('PER_PAGE', 10));
@@ -99,7 +99,7 @@ class MPWangzheAdminService extends Service
             $data->title = $params['title'];
         }
 
-        if ($params['winnerId']) {
+        if ($params['winnerId'] || $params['winnerId'] == 0) {
             $data->winner_id = $params['winnerId'];
         }
 
