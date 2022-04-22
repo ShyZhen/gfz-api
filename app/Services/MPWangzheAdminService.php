@@ -175,7 +175,7 @@ class MPWangzheAdminService extends Service
     public function setSkinStatus($platformId, $id, $userUuid)
     {
         $data = $this->mPWangzheSkinConvertRepository->model()
-            ::where(['user_id' => $id, 'user_uuid' => $userUuid])
+            ::where(['id' => $id, 'user_uuid' => $userUuid])
             ->first();
 
         if ($data) {
