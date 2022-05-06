@@ -18,6 +18,7 @@ class CreateWangzhePlatformTable extends Migration
             $table->string('uuid', 64)->index();
             $table->string('app_id', 64);
             $table->string('app_secret', 64);
+            $table->string('subscribe_key', 64)->default('');
             $table->enum('deleted', ['yes', 'none'])->default('none');
             $table->timestamps();
         });

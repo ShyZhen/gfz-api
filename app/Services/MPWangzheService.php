@@ -64,9 +64,11 @@ class MPWangzheService extends Service
     private $mPWangzheDrawUserRepository;
     private $mPWangzheSkinConvertRepository;
     private $mPWangzheHeroTutorialRepository;
+    private $platformWechatService;
 
     /**
      * @param RedisService $redisService
+     * @param PlatformWechatService $platformWechatService
      * @param MPWangzheDrawRepository $mPWangzheDrawRepository
      * @param MPWangzheSkinRepository $mPWangzheSkinRepository
      * @param MPWangzheSkinLogRepository $mPWangzheSkinLogRepository
@@ -76,6 +78,7 @@ class MPWangzheService extends Service
      */
     public function __construct(
         RedisService $redisService,
+        PlatformWechatService $platformWechatService,
         MPWangzheDrawRepository $mPWangzheDrawRepository,
         MPWangzheSkinRepository $mPWangzheSkinRepository,
         MPWangzheSkinLogRepository $mPWangzheSkinLogRepository,
@@ -84,6 +87,7 @@ class MPWangzheService extends Service
         MPWangzheHeroTutorialRepository $mPWangzheHeroTutorialRepository
     ) {
         $this->redisService = $redisService;
+        $this->platformWechatService = $platformWechatService;
         $this->mPWangzheDrawRepository = $mPWangzheDrawRepository;
         $this->mPWangzheSkinRepository = $mPWangzheSkinRepository;
         $this->mPWangzheSkinLogRepository = $mPWangzheSkinLogRepository;
@@ -383,8 +387,17 @@ class MPWangzheService extends Service
             }
 
             $draw->type = self::TYPE_OFF;
-            $draw->save();
+            $draw->save() && $this->sendSubscribe($draw->platform_id, $winnerId, $draw);
         }
+    }
+
+    private function sendSubscribe($platformId, $winnerId, $draw)
+    {
+        $params = [
+            'title' => mb_substr($draw->title, 0, 15) . '...',
+            'remark' => '恭喜您已中奖,需尽快兑换',
+        ];
+        $this->platformWechatService->sendSubscribe($platformId, $winnerId, $params);
     }
 
     /**
