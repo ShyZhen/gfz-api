@@ -387,7 +387,7 @@ class MPWangzheService extends Service
             }
 
             $draw->type = self::TYPE_OFF;
-            $draw->save() && $this->sendSubscribe($draw->platform_id, $winnerId, $draw);
+            $draw->save() && $this->sendSubscribe($draw->platform_id, $draw->winner_id, $draw);
         }
     }
 

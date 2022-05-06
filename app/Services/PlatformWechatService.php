@@ -28,7 +28,7 @@ class PlatformWechatService extends Service
         $this->redisService = $redisService;
     }
 
-    public function sendSubscribe($platformId, $userId, $arr): bool
+    public function sendSubscribe($platformId, $userId, $arr)
     {
         $openid = $appId = $appSecret = '';
 
@@ -45,25 +45,23 @@ class PlatformWechatService extends Service
         }
 
         // 没配置直接返回
-        if (!$platformRow->subscribe_key) {
-            return true;
-        }
+        if ($platformRow->subscribe_key) {
 
-        // 发送订阅消息
-        if ($openid && $appId && $appSecret) {
-            $accessToken = $this->getAccessToken($appId, $appSecret, $platformId);
-            $params = [
-                'access_token' => $accessToken,
-            ];
+            // 发送订阅消息
+            if ($openid && $appId && $appSecret) {
+                $accessToken = $this->getAccessToken($appId, $appSecret, $platformId);
+                $params = [
+                    'access_token' => $accessToken,
+                ];
 
-            $requestParams = $this->urlParams($params);
-            $url = self::SUBSCRIBE_SEND . $requestParams;
+                $requestParams = $this->urlParams($params);
+                $url = self::SUBSCRIBE_SEND . $requestParams;
 
-            // 模板参数
-            $template = "{
+                // 模板参数
+                $template = "{
                   \"touser\": \"{$openid}\",
-                  \"template_id\": \"nxVbi1PgbolShJP3y2Pox8nJPnZwRHfjRwztAPMkINs\",
-                  \"page\": \"index\",
+                  \"template_id\": \"$platformRow->subscribe_key\",
+                  \"page\": \"pages/draw/draw\",
                   \"miniprogram_state\":\"formal\",
                   \"lang\":\"zh_CN\",
                   \"data\": {
@@ -76,10 +74,12 @@ class PlatformWechatService extends Service
                   }
                 }";
 
-            $result = $this->curlPost($url, $template);
-            // dd($result);
-            return true;
+                $result = $this->curlPost($url, $template);
+                // dd($result);
+                //file_put_contents('/tmp/'.date('m', time()).'.log', var_export($result, true) . "\r\n", FILE_APPEND);
+            }
         }
+
     }
 
 
