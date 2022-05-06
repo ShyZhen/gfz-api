@@ -61,7 +61,7 @@ class PlatformWechatService extends Service
                 $template = "{
                   \"touser\": \"{$openid}\",
                   \"template_id\": \"$platformRow->subscribe_key\",
-                  \"page\": \"pages/draw/draw\",
+                  \"page\": \"pages/me/drawLog\",
                   \"miniprogram_state\":\"formal\",
                   \"lang\":\"zh_CN\",
                   \"data\": {
