@@ -251,7 +251,7 @@ class MPWangzheService extends Service
     }
 
     /**
-     * 抽奖活动列表（已完成、进行中）
+     * 抽奖活动列表（1已结束、0进行中）
      *
      * @param $type
      * @param $platformUuid
@@ -266,10 +266,16 @@ class MPWangzheService extends Service
             $platformId = $row->id;
         }
 
+        // 当已结束列表时，按照更新时间排序
+        $desc = 'created_at';
+        if ($type) {
+            $desc = 'updated_at';
+        }
+
         $data = $this->mPWangzheDrawRepository->model()
             ::where('platform_id', $platformId)
             ->where('type', $type)
-            ->orderByDesc('created_at')
+            ->orderByDesc($desc)
             ->paginate(env('PER_PAGE', 10));
 
         return response()->json(
