@@ -97,15 +97,17 @@ class MPWangzheService extends Service
     }
 
     /**
-     * 获取皮肤碎片详细日志
+     * 获取皮肤碎片详细日志(最近90天)
      *
      * @return mixed
      */
     public function getMySkinLogs()
     {
         $userId = Auth::id();
+        $now = Carbon::now()->modify('-90 days');
         $data = $this->mPWangzheSkinLogRepository->model()
             ::where('user_id', $userId)
+            ->where('created_at', '>', $now)
             ->orderByDesc('id')
             ->paginate(env('PER_PAGE', 10));
 
