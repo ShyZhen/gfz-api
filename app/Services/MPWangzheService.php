@@ -104,10 +104,10 @@ class MPWangzheService extends Service
     public function getMySkinLogs()
     {
         $userId = Auth::id();
-        $now = Carbon::now()->modify('-90 days');
+        $now = Carbon::now()->modify('-30 days');
         $data = $this->mPWangzheSkinLogRepository->model()
             ::where('user_id', $userId)
-            ->where('created_at', '>', $now)
+            ->where('created_at', '>=', $now)
             ->orderByDesc('id')
             ->paginate(env('PER_PAGE', 10));
 
@@ -118,13 +118,13 @@ class MPWangzheService extends Service
     }
 
     /**
-     * 删除100天以前的日志
+     * 删除40天以前的日志
      *
      * @return \Illuminate\Http\JsonResponse
      */
     public function deleteSkinLogs()
     {
-        $now = Carbon::now()->modify('-100 days');
+        $now = Carbon::now()->modify('-40 days');
         $data = $this->mPWangzheSkinLogRepository->model()
             ::where('created_at', '<', $now)
             ->delete();
