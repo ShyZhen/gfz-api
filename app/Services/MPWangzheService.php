@@ -58,13 +58,13 @@ class MPWangzheService extends Service
     const TYPE_OFF = 1; // 活动已结束
 
     private $redisService;
+    private $platformWechatService;
     private $mPWangzheDrawRepository;
     private $mPWangzheSkinRepository;
     private $mPWangzheSkinLogRepository;
     private $mPWangzheDrawUserRepository;
     private $mPWangzheSkinConvertRepository;
     private $mPWangzheHeroTutorialRepository;
-    private $platformWechatService;
 
     /**
      * @param RedisService $redisService
@@ -110,6 +110,24 @@ class MPWangzheService extends Service
             ->where('created_at', '>', $now)
             ->orderByDesc('id')
             ->paginate(env('PER_PAGE', 10));
+
+        return response()->json(
+            ['data' => $data],
+            Response::HTTP_OK
+        );
+    }
+
+    /**
+     * 删除100天以前的日志
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function deleteSkinLogs()
+    {
+        $now = Carbon::now()->modify('-100 days');
+        $data = $this->mPWangzheSkinLogRepository->model()
+            ::where('created_at', '<', $now)
+            ->delete();
 
         return response()->json(
             ['data' => $data],

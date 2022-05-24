@@ -75,6 +75,8 @@ Route::prefix('V1')->namespace('Api\V1')->group(function () {
         Route::get('draw/{type}', 'MPWangzheController@getDrawList');
         Route::get('draw-user/{drawId}', 'MPWangzheController@getDrawUserList');
         Route::get('getHeroTutorial/{heroId}', 'MPWangzheController@getHeroTutorial');
+        Route::get('deleteSkinLogs', 'MPWangzheController@deleteSkinLogs');
+
     });
     ################################↑↑王者荣耀小程序↑↑###################################
 

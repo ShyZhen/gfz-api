@@ -51,6 +51,16 @@ class MPWangzheController extends Controller
         return $this->mpWangzheService->getMySkinLogs();
     }
 
+    /**
+     * 删除日志数据
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function deleteSkinLogs()
+    {
+        return $this->mpWangzheService->deleteSkinLogs();
+    }
+
 
     /**
      * 主动动作的碎片更新（除了登录、注册等被动动作）
