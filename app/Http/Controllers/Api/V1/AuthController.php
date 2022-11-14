@@ -319,7 +319,9 @@ class AuthController extends Controller
     public function updateMyName(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|max:20|unique:users,name,' . Auth::id() . ',id',
+            // 唯一
+            // 'name' => 'required|max:20|unique:users,name,' . Auth::id() . ',id',
+            'name' => 'required|max:20',
         ]);
 
         if ($validator->fails()) {

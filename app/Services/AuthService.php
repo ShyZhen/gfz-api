@@ -402,14 +402,15 @@ class AuthService extends Service
      */
     public function updateMyName($name)
     {
-        if ($name) {
-            if (!$this->securityCheckService->stringCheck($name)) {
-                return response()->json(
-                    ['message' => __('app.has_sensitive_words')],
-                    Response::HTTP_UNPROCESSABLE_ENTITY
-                );
-            }
-        }
+        // 敏感词检测
+//        if ($name) {
+//            if (!$this->securityCheckService->stringCheck($name)) {
+//                return response()->json(
+//                    ['message' => __('app.has_sensitive_words')],
+//                    Response::HTTP_UNPROCESSABLE_ENTITY
+//                );
+//            }
+//        }
 
         $user = Auth::user();
         if ($user->is_rename == 'yes') {
