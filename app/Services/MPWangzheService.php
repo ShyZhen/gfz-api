@@ -271,7 +271,7 @@ class MPWangzheService extends Service
     }
 
     /**
-     * 抽奖活动列表（1已结束、0进行中）
+     * 抽奖活动列表（$type 1已结束、0进行中）
      *
      * @param $type
      * @param $platformUuid
@@ -297,6 +297,12 @@ class MPWangzheService extends Service
             ->where('type', $type)
             ->orderByDesc($desc)
             ->paginate(env('PER_PAGE', 10));
+
+        if ($type == 0) {
+            foreach ($data as $datum) {
+                $datum->winner_id = 0;
+            }
+        }
 
         return response()->json(
             ['data' => $data],
