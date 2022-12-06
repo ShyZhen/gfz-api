@@ -75,7 +75,7 @@ Route::prefix('V1')->namespace('Api\V1')->group(function () {
         Route::get('draw/{type}', 'MPWangzheController@getDrawList');
         Route::get('draw-user/{drawId}', 'MPWangzheController@getDrawUserList');
         Route::get('getHeroTutorial/{heroId}', 'MPWangzheController@getHeroTutorial');
-        Route::get('deleteSkinLogs', 'MPWangzheController@deleteSkinLogs');
+        Route::get('deleteSkinLogs', 'MPWangzheController@deleteSkinLogs');  // https://api.fmock.com/V1/mpwangzhe/deleteSkinLogs
 
     });
     ################################↑↑王者荣耀小程序↑↑###################################
