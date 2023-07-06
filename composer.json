@@ -27,7 +27,8 @@
         "lcobucci/jwt": "3.3.3",
         "predis/predis": "^1.1",
         "qiniu/php-sdk": "^7.2",
-        "ramsey/uuid": "^3.8"
+        "ramsey/uuid": "^3.8",
+        "ext-openssl": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5.2",
