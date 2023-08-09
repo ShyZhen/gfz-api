@@ -11,6 +11,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\Wiki;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
@@ -30,10 +31,18 @@ class WikiController extends Controller
      */
     public function getWikiDetail(Request $request)
     {
+        $row = [];
         $title = $request->get('title');
         if ($title) {
-
+            $row = Wiki::where('title', $title)
+                ->orWhere('title','like','%'.$title.'%')
+                ->get();
         }
+
+        return response()->json(
+            ['data' => $row],
+            Response::HTTP_OK
+        );
     }
 
 }
