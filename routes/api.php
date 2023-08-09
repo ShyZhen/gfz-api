@@ -91,7 +91,7 @@ Route::prefix('V1')->namespace('Api\V1')->group(function () {
     });
     #################################↑↑头像挂件工坊↑↑###################################
 
-
+    ############################ 王者中台（给客户用的） ##############################
     Route::prefix('mpwzadmin/')->group(function () {
         Route::post('login', 'MPWangzheAdminController@loginPlatform');
         Route::post('draw/{type}', 'MPWangzheAdminController@getDrawList');
@@ -100,6 +100,11 @@ Route::prefix('V1')->namespace('Api\V1')->group(function () {
         Route::post('add-draw', 'MPWangzheAdminController@addDraw');
         Route::post('skin/{userUuid}', 'MPWangzheAdminController@getSkinDeteil');
         Route::post('skin-status/{id}/{userUuid}', 'MPWangzheAdminController@setSkinStatus');
+    });
+
+    ############################ 配料Wiki ##############################
+    Route::prefix('wiki/')->group(function () {
+        Route::post('detail', 'WikiController@getWikiDetail');
     });
 });
 
