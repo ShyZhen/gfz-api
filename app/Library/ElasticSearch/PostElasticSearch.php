@@ -30,7 +30,7 @@ class PostElasticSearch extends ElasticSearch
      *
      * @return string
      */
-    public function getIndexName()
+    public function getIndexName(): string
     {
         return $this->esConfig[$this->indexKey];
     }
@@ -46,11 +46,42 @@ class PostElasticSearch extends ElasticSearch
      */
     public function createIndex()
     {
+//        $mappings = $this->getMappingsConfig();
+//        $params = $this->getSettingConfig($mappings);
+
         $mappings = $this->articleMappingsConfig();
         $params = $this->articleSettingConfig($mappings);
         $response = $this->esClient->indices()->create($params);
 
         return $response;
+    }
+
+    /**
+     * @overload 获取mapping配置参数
+     *
+     * author shyZhen <huaixiu.zhen@gmail.com>
+     * https://www.litblc.com
+     *
+     * @return array
+     */
+    protected function getMappingsConfig()
+    {
+        return parent::getMappingsConfig();
+    }
+
+    /**
+     * @overload 获取setting参数
+     *
+     * author shyZhen <huaixiu.zhen@gmail.com>
+     * https://www.litblc.com
+     *
+     * @param $properties
+     *
+     * @return array
+     */
+    protected function getSettingConfig($properties)
+    {
+        return parent::getSettingConfig($properties);
     }
 
     /**

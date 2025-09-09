@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @Author huaixiu.zhen
  * http://litblc.com
@@ -8,7 +7,7 @@
  * Time: 16:41
  */
 
-namespace Zhiyi\Plus\Lib\ElasticSearch\Base;
+namespace App\Library\ElasticSearch\Base;
 
 use Elasticsearch\ClientBuilder;
 
@@ -37,8 +36,19 @@ abstract class ElasticSearch
      */
     public $fields = [];
 
-    public $scrollTtl = '3m';     // 设置大一点，防止出现 No search context found for id
-    public $scrollMaxLimit = 400;  // 超过一定数量要删除scroll_id，因为最多保留500个
+    /**
+     * 游标查询参数 设置大一点，防止出现 No search context found for id
+     *
+     * @var string
+     */
+    public $scrollTtl = '3m';
+
+    /**
+     * 游标查询参数 超过一定数量要删除scroll_id，因为最多保留500个
+     *
+     * @var int
+     */
+    public $scrollMaxLimit = 400;
 
     /**
      * 初始化链接
@@ -57,6 +67,7 @@ abstract class ElasticSearch
                 ->setHosts($host)
                 ->setSelector($this->esConfig['selector']['sticky_round_robin'])
                 ->setRetries($this->esConfig['retries']);
+
             if ($username && $password) {
                 $this->esClient->setBasicAuthentication($username, $password);
             }
@@ -75,7 +86,7 @@ abstract class ElasticSearch
      *
      * @return string
      */
-    abstract public function getIndexName();
+    abstract public function getIndexName(): string;
 
     /**
      * 设置当前index
@@ -85,7 +96,7 @@ abstract class ElasticSearch
      *
      * @return mixed
      */
-    public function setIndexName()
+    public function setIndexName(): string
     {
         return $this->index = $this->getIndexName();
     }
@@ -115,6 +126,7 @@ abstract class ElasticSearch
         if ($this->esClient->indices()->exists($params)) {
             return true;
         }
+
         return false;
     }
 
@@ -122,8 +134,7 @@ abstract class ElasticSearch
      * 判断doc文档是否存在
      *
      * @param $id
-     * @param $routing
-     * 
+     *
      * @return bool
      */
     public function existsDoc($id, $routing = ''): bool
@@ -139,6 +150,7 @@ abstract class ElasticSearch
         if ($this->esClient->exists($params)) {
             return true;
         }
+
         return false;
     }
 
@@ -356,6 +368,21 @@ abstract class ElasticSearch
             'size' => $size,
             'body' => [
 
+//                'query' => [
+//                    // 单字段
+//                    // 'match' => [
+//                    //     'key1' => $query
+//                    // ]
+//                    // 多字段
+//                    'multi_match' => [
+//                        'query' => $query,
+//                        'type' => 'best_fields',  // 完全匹配 'type' => 'phrase',
+//                        'operator' => 'or',
+//                        'fields' => $this->fields,
+//                        'analyzer' => $analyzer ?: $this->tokenizer,
+//                    ],
+//                ],
+
                 'query' => [
                     'bool' => [
                         'must' => [
@@ -381,14 +408,14 @@ abstract class ElasticSearch
                 'highlight' => [
                     'fields' => [
                         'title' => [
-                            'pre_tags' => ["<em>"],
-                            'post_tags' => ["</em>"],
+                            'pre_tags' => ['<em>'],
+                            'post_tags' => ['</em>'],
                         ],
                         'content' => [
-                            'pre_tags' => ["<em>"],
-                            'post_tags' => ["</em>"],
-                        ]
-                    ]
+                            'pre_tags' => ['<em>'],
+                            'post_tags' => ['</em>'],
+                        ],
+                    ],
                 ],
             ],
         ];
@@ -399,11 +426,15 @@ abstract class ElasticSearch
         }
 
         $response = $this->esClient->search($params);
+
         return $response['hits']['hits'];
     }
 
     /**
      * 搜索文档 doc 滚动查询
+     *
+     * startOffset must be non-negative, and endOffset must be >= startOffset, and offsets must not go backwards
+     * https://github.com/medcl/elasticsearch-analysis-pinyin/issues/261
      *
      * Author huaixiu.zhen@gmail.com
      * http://litblc.com
@@ -412,7 +443,6 @@ abstract class ElasticSearch
      * @param $filter array doc中的筛选条件，键值对方式
      * @param $callback callable
      * @param $analyzer string
-     *
      */
     public function searchScroll($query, array $filter = [], $callback = null, $analyzer = '')
     {
@@ -449,14 +479,14 @@ abstract class ElasticSearch
                 'highlight' => [
                     'fields' => [
                         'title' => [
-                            'pre_tags' => ["<em>"],
-                            'post_tags' => ["</em>"],
+                            'pre_tags' => ['<em>'],
+                            'post_tags' => ['</em>'],
                         ],
                         'content' => [
-                            'pre_tags' => ["<em>"],
-                            'post_tags' => ["</em>"],
-                        ]
-                    ]
+                            'pre_tags' => ['<em>'],
+                            'post_tags' => ['</em>'],
+                        ],
+                    ],
                 ],
             ],
         ];
@@ -479,11 +509,13 @@ abstract class ElasticSearch
         }
 
         $this->clearScroll($response['_scroll_id']);
+
         return true;
     }
 
     /**
      * Clears the current scroll window if there is a scroll_id stored
+     *
      * @param $scrollId
      */
     public function clearScroll($scrollId)
@@ -502,7 +534,7 @@ abstract class ElasticSearch
      *
      * @return array
      */
-    protected function getMappingsConfig(): array
+    protected function getMappingsConfig()
     {
         $properties = [];
         $common = [
@@ -555,8 +587,8 @@ abstract class ElasticSearch
                                 'type' => 'custom',
                                 'tokenizer' => 'ik_smart',
                                 'filter' => [
-                                    'my_pinyin'
-                                ]
+                                    'my_pinyin',
+                                ],
                             ],
                         ],
                         'filter' => [

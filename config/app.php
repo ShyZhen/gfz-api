@@ -193,7 +193,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\ObserversServiceProvider::class,
-
+        App\Providers\LogServiceProvider::class,
     ],
 
     /*

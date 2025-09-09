@@ -56,4 +56,19 @@ class TestController
 //        dd($postEs->updateDoc($id, ['title' => 'test']));
         dd($postEs->search('测试'));
     }
+
+
+    public function test()
+    {
+        set_error_handler('self::errorHandle');
+        echo [3];
+    }
+
+    public static function errorHandle($errno, $errstr, $errfile, $errline)
+    {
+        echo $errno;
+        echo $errstr;
+        echo $errfile;
+        echo $errline;
+    }
 }
