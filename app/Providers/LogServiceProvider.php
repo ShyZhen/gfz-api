@@ -34,7 +34,7 @@ class LogServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //$this->sqlToLog();
+        $this->sqlToLog();
         // $this->sqlToDb();
     }
     /**
@@ -47,7 +47,9 @@ class LogServiceProvider extends ServiceProvider
         }
         DB::listen(function ($query) {
             $sql = str_replace(['%', '?'], ["%%", "%s"], $query->sql);
-            $log = @vsprintf($sql, array_map(fn($v) => is_int($v) ? $v : "'$v'", $query->bindings)) ?: $sql;
+            $log = @vsprintf($sql, array_map(function ($v) {
+                return is_int($v) ? $v : "'$v'";
+            }, $query->bindings)) ?: $sql;
 
             $log = "[{$query->time}ms] " . $log;
             $logDir = storage_path('logs/sql');

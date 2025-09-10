@@ -98,6 +98,13 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+        // sql log, for LogServiceProvider.php
+        'sql'=>[
+            'driver' => 'daily',
+            'level' => 'debug',
+            'path' => storage_path('logs/sql/log.log'),
+            'days' => env('LOG_DAYS', 14),
+        ],
     ],
 
 ];
